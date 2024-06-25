@@ -147,7 +147,8 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "src/dist/bundle.js"
   ],
   "prettier": {
     "quoteProps": "consistent",

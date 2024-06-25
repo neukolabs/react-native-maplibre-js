@@ -15494,7 +15494,9 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.74.2
+    react-native-fs: ^2.20.0
     react-native-web: ~0.19.10
+    react-native-webview: ^13.10.4
   languageName: unknown
   linkType: soft
 

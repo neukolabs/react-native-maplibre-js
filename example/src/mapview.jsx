@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import MaplibreMapProvider from 'react-native-aws-location-map';
+import MaplibreMapProvider from 'react-native-maplibre-js';
 import { useMaplibreMapContext } from '../../src/components/map-context';
 
 export default function MapView() {

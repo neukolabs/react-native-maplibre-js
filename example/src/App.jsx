@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import MaplibreMapProvider from 'react-native-aws-location-map';
+import MaplibreMapProvider from 'react-native-maplibre-js';
 import MapView from './mapview';
 
 const styles = StyleSheet.create({
