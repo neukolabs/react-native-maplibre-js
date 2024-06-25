@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useMaplibreMapContext } from './components/map-context';
+import { useMaplibreContext } from './components/maplibre-context.jsx';
 
 const content = require('./dist/bundle.js');
 
@@ -29,7 +29,7 @@ export default function MapProvider(props) {
 
   // hooks
   const webviewRef = useRef();
-  const { ref, setRef, setLoaded } = useMaplibreMapContext();
+  const { ref, setRef, setLoaded } = useMaplibreContext();
 
   // states
 

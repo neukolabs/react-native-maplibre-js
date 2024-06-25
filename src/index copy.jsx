@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import MaplibreContext from './components/maplibre-context';
+import MaplibreMapContext from './components/maplibre-context';
 import MapProvider from './map';
 
 // exports dot notation
 export const Map = MapProvider;
 
 // relationship
-MaplibreProvider.Map = Map;
+MaplibreMapProvider.Map = Map;
 
-export default function MaplibreProvider(props) {
+export default function MaplibreMapProvider(props) {
   // input
   const { children } = props;
 
@@ -37,7 +37,7 @@ export default function MaplibreProvider(props) {
   }, [ref]);
 
   return (
-    <MaplibreContext.Provider
+    <MaplibreMapContext.Provider
       value={{
         ref: ref,
         setRef: setRef,
@@ -48,6 +48,6 @@ export default function MaplibreProvider(props) {
       }}
     >
       {children}
-    </MaplibreContext.Provider>
+    </MaplibreMapContext.Provider>
   );
 }

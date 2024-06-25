@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import MaplibreMapProvider from 'react-native-maplibre-js';
-import { useMaplibreMapContext } from '../../src/components/map-context';
+import MaplibreProvider from 'react-native-maplibre-js';
+import { useMaplibreContext } from '../../src/components/maplibre-context';
 
 export default function MapView() {
   // hooks
-  const { loaded, flyTo } = useMaplibreMapContext();
+  const { loaded, flyTo } = useMaplibreContext();
 
   const onMapEvent = (name) => {
     console.log('example.MapView@onMapEvent', name);
@@ -23,7 +23,7 @@ export default function MapView() {
   }, [loaded, flyTo]);
 
   return (
-    <MaplibreMapProvider.Map
+    <MaplibreProvider.Map
       containerStyle={styles.map}
       options={{
         style:
@@ -34,7 +34,7 @@ export default function MapView() {
       }}
       mapEventListeners={['load']}
       onMapEvent={onMapEvent}
-    ></MaplibreMapProvider.Map>
+    ></MaplibreProvider.Map>
   );
 }
 

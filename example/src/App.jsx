@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import MaplibreMapProvider from 'react-native-maplibre-js';
+import MaplibreProvider from 'react-native-maplibre-js';
 import MapView from './mapview';
 
 const styles = StyleSheet.create({
@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
 export default function App() {
   return (
     <View style={styles.container}>
-      <MaplibreMapProvider>
+      <MaplibreProvider>
         <MapView />
-      </MaplibreMapProvider>
+      </MaplibreProvider>
     </View>
   );
 }
