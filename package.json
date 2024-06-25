@@ -41,14 +41,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/popoimenenet/react-native-maplibre-js.git"
+    "url": "git+https://github.com/neukolabs/react-native-maplibre-js.git"
   },
   "author": "Popoi Menenet <saiful.nizam.ismaail@gmail.com> (https://github.com/popoimenenet)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/popoimenenet/react-native-maplibre-js/issues"
+    "url": "https://github.com/neukolabs/react-native-maplibre-js/issues"
   },
-  "homepage": "https://github.com/popoimenenet/react-native-maplibre-js#readme",
+  "homepage": "https://github.com/neukolabs/react-native-maplibre-js#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
