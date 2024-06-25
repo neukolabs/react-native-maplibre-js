@@ -30,7 +30,9 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "clean": "del-cli lib",
+    "build": "npx webpack && mkdir -p ./src/dist && node ./scripts/prepack.js",
     "prepare": "bob build",
     "release": "release-it"
   },
