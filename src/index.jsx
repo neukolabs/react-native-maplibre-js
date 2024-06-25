@@ -1,50 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import MaplibreContext from './components/maplibre-context';
-import MapProvider from './map';
-
-// exports dot notation
-export const Map = MapProvider;
+import { MapProvider } from './MapProvider';
 
 // relationship
-MaplibreProvider.Map = Map;
+MaplibreProvider.Map = MapProvider;
 
 export default function MaplibreProvider(props) {
   // input
   const { children } = props;
 
   // states
-  const [ref, setRef] = useState(null);
+  const [mapRef, setMapRef] = useState(null);
   const [loaded, setLoaded] = useState(false);
-
-  const invokeMapFunction = (name, ...args) => {
-    console.log('MaplibreMapProvider@invokeMapFunction', name, args);
-    ref.current.postMessage(
-      JSON.stringify({
-        type: 'invokeMapFunction',
-        functionName: name,
-        arguments: [...args],
-      })
-    );
-  };
-
-  useEffect(() => {
-    console.log('MaplibreMapProvider@useEffect[loaded]', loaded);
-  }, [loaded]);
-
-  useEffect(() => {
-    // sanity check
-    console.log('MaplibreMapProvider@useEffect[ref]', ref);
-  }, [ref]);
+  const [mapMethod, setMapMethod] = useState(null);
 
   return (
     <MaplibreContext.Provider
       value={{
-        ref: ref,
-        setRef: setRef,
-        loaded: loaded,
-        setLoaded: setLoaded,
-        zoomTo: (zoom = 12) => invokeMapFunction('zoomTo', zoom),
-        flyTo: (coordinate = [0, 0]) => invokeMapFunction('flyTo', coordinate),
+        map: {
+          mapRef: mapRef,
+          setMapRef: setMapRef,
+          loaded: loaded,
+          setLoaded: setLoaded,
+          setMapMethod: setMapMethod,
+          ...mapMethod,
+        },
       }}
     >
       {children}
