@@ -1,20 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useMaplibreMapContext } from './components/map-context';
+import { useMaplibreContext } from './components/maplibre-context.jsx';
+import { MapMethods, eventManager } from './MapMethods.jsx';
 
-const content = require('./dist/bundle.js');
-
-const defaultStyle = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-    width: '100%',
-    margin: 20,
-  },
-});
-
-export default function MapProvider(props) {
+export const MapProvider = (props) => {
   // input
   const {
     containerStyle = defaultStyle.container,
@@ -28,10 +18,8 @@ export default function MapProvider(props) {
   } = props;
 
   // hooks
-  const webviewRef = useRef();
-  const { ref, setRef, setLoaded } = useMaplibreMapContext();
-
-  // states
+  const { map } = useMaplibreContext();
+  const { mapRef, setMapRef, setLoaded, setMapMethod } = map;
 
   const dispatchEvent = (name) => {
     switch (name) {
@@ -50,6 +38,7 @@ export default function MapProvider(props) {
 
     // process data
     const event = JSON.parse(e.nativeEvent.data);
+    console.log('MapProvider.onMessage', 'event', event);
     try {
       switch (event.type) {
         case 'log':
@@ -57,6 +46,9 @@ export default function MapProvider(props) {
           break;
         case 'mapEvent':
           dispatchEvent(event.payload.name);
+          break;
+        case 'invokeResponse':
+          eventManager.emit(event.requestId, event.payload);
           break;
         default:
           break;
@@ -66,22 +58,30 @@ export default function MapProvider(props) {
     }
   };
 
+  const handleWebRef = (ref) => {
+    // sanity check
+    if (mapRef || !ref) return;
+    setMapRef(ref);
+  };
+
   useEffect(() => {
     // sanity check
-    if (ref) return;
+    if (!mapRef) return;
+
+    setMapMethod(MapMethods(mapRef));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    setRef(webviewRef);
-  }, [ref, setRef]);
+  }, [mapRef]);
 
   return (
     <View style={containerStyle}>
       <WebView
-        ref={webviewRef}
-        source={{ html: content.default }}
+        ref={handleWebRef}
+        source={{ html: require('./dist/bundle.js').default }}
         userAgent="Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"
         injectedJavaScriptObject={{
           options,
+          isDevelopment: false,
           awsRegion,
           mapName,
           authType,
@@ -92,4 +92,13 @@ export default function MapProvider(props) {
       />
     </View>
   );
-}
+};
+
+const defaultStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    margin: 20,
+  },
+});

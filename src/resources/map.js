@@ -2,21 +2,8 @@
 
 'use strict';
 
-var console = {};
-console.log = function (message) {
-  if (window.hasOwnProperty('ReactNativeWebView')) {
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({
-        type: 'log',
-        payload: {
-          message: message,
-        },
-      })
-    );
-  }
-};
-
 import { Signer } from '@aws-amplify/core';
+import { log } from './logger';
 
 // const
 const DEFAULT_CREDENTIALS = {
@@ -45,11 +32,12 @@ class Map {
     this.authType = authType;
     this.credentials = credentials;
     this.map = null;
+    this.navigationControl = null;
   }
 
   _resolveAuthOptions() {
-    // console.log(`_resolveAuthOptions: ${this.authType}`)
-    window.ReactNativeWebView.postMessage(this.authType);
+    // log(`_resolveAuthOptions: ${this.authType}`)
+    log(this.authType);
     if (this.authType === 'apiKey') {
       return {
         style: `https://maps.geo.${this.awsRegion}.amazonaws.com/maps/v0/maps/${this.mapName}/style-descriptor?key=${this.credentials.apiKey}`,
@@ -73,7 +61,7 @@ class Map {
               ),
             };
           }
-          console.log('_getMapAuthenticationOptions', 'url', url);
+          log('_getMapAuthenticationOptions', 'url', url);
           return { url };
         },
       };
@@ -89,17 +77,86 @@ class Map {
   init(options = DEFAULT_OPTIONS) {
     // resolve auth options
     const authOptions = this._resolveAuthOptions();
-    console.log({
-      ...options,
-      container: this.id,
-      ...authOptions,
-    });
+    // log({
+    //   ...options,
+    //   container: this.id,
+    //   ...authOptions,
+    // });
 
     this.map = new maplibregl.Map({
       ...options,
       container: this.id,
       ...authOptions,
     });
+  }
+
+  addControl(position = 'top-right') {
+    try {
+      // sanity check
+      if (!this.map) {
+        throw new Error('Map not initialized');
+      }
+
+      if (!this.navigationControl)
+        this.navigationControl = new maplibregl.NavigationControl();
+
+      // call method
+      this.map.addControl(this.navigationControl, position);
+    } catch (err) {
+      log(err.message);
+    }
+  }
+
+  hasControl() {
+    try {
+      // sanity check
+      if (!this.map) {
+        throw new Error('Map not initialized');
+      }
+
+      if (!this.navigationControl) {
+        return false;
+      }
+
+      // call method
+      return this.map.hasControl(this.navigationControl);
+    } catch (err) {
+      log(err.message);
+    }
+  }
+
+  removeControl() {
+    try {
+      // sanity check
+      if (!this.map) {
+        throw new Error('Map not initialized');
+      }
+
+      if (!this.navigationControl) {
+        return null;
+      }
+
+      // call method
+      this.map.removeControl(this.navigationControl);
+      return null;
+    } catch (err) {
+      log(err.message);
+    }
+  }
+
+  async loadImages(url) {
+    try {
+      // sanity check
+      if (!this.map) {
+        throw new Error('Map not initialized');
+      }
+
+      // call method
+      await this.map.loadImages(url);
+      return null;
+    } catch (err) {
+      log(err.message);
+    }
   }
 
   invokeMethod(methodName, methodArgs = []) {
@@ -112,7 +169,21 @@ class Map {
       // call method
       this.map[methodName].apply(this.map, methodArgs);
     } catch (err) {
-      console.log(err.message);
+      log(err.message);
+    }
+  }
+
+  invokeGetResponseMethod(methodName, methodArgs = []) {
+    try {
+      // sanity check
+      if (!this.map) {
+        throw new Error('Map not initialized');
+      }
+
+      // call method
+      return this.map[methodName].apply(this.map, methodArgs);
+    } catch (err) {
+      log(err.message);
     }
   }
 }
