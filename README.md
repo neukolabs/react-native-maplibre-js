@@ -1,4 +1,8 @@
-# react-native-maplibre-js
+
+
+![CI](https://github.com/neukolabs/react-native-maplibre-j/actions/workflows/ci.yml/badge.svg)
+
+# React-Native Maplibre JS
 
 A Maplibre JS wrapper for react-native
 
