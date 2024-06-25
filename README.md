@@ -1,5 +1,5 @@
 
-
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 ![CI](https://github.com/neukolabs/react-native-maplibre-j/actions/workflows/ci.yml/badge.svg)
 
 # React-Native Maplibre JS
