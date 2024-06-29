@@ -13,7 +13,7 @@ export const Map = (props) => {
     options = null,
     mapEventListeners = [],
     onMapEvent = () => {},
-    awsLocationService = AwsMapAuthentication
+    awsLocationService = AwsMapAuthentication,
   } = props;
 
   // hooks
@@ -88,7 +88,7 @@ export const Map = (props) => {
         injectedJavaScript={webviewOnloadedJs({
           options: options,
           mapEventListeners: mapEventListeners,
-          awsAuthentication: awsLocationService
+          awsAuthentication: awsLocationService,
         })}
         javaScriptEnabled={true}
         onMessage={(e) => onMessage(e)}

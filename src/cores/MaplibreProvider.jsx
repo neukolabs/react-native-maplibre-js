@@ -10,12 +10,13 @@ const MaplibreProvider = (props) => {
   const [mapRef, setMapRef] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [mapMethod, setMapMethod] = useState(null);
-  const [awsAuthentication, setAwsAuthentication] = useState(AwsMapAuthentication)
+  const [awsAuthentication, setAwsAuthentication] =
+    useState(AwsMapAuthentication);
 
   return (
     <MaplibreContext.Provider
       value={{
-        awsAuthentication:  awsAuthentication,
+        awsAuthentication: awsAuthentication,
         setAwsAuthentication: setAwsAuthentication,
         map: {
           mapRef: mapRef,
