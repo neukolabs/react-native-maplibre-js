@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useMaplibreContext } from './components/maplibre-context.jsx';
+import { useMaplibreContext } from '../components/maplibre-context.jsx';
 import { MapMethods, eventManager } from './MapMethods.jsx';
+import { webviewOnloadedJs } from './utilities.jsx';
+import { AwsMapAuthentication } from './AWSLocationServiceMap.jsx';
 
-export const MapProvider = (props) => {
+export const Map = (props) => {
   // input
   const {
     containerStyle = defaultStyle.container,
     options = null,
-    awsRegion = 'us-east-1',
-    mapName,
-    authType,
-    credentials = null,
     mapEventListeners = [],
     onMapEvent = () => {},
+    awsLocationService = AwsMapAuthentication,
   } = props;
 
   // hooks
@@ -33,11 +32,17 @@ export const MapProvider = (props) => {
   };
 
   const onMessage = (e) => {
+    // console.log('MapProvider.onMessage', 'e', e);
     // sanity check
     if (!e.nativeEvent.data || e.nativeEvent.data === 'undefined') return;
 
     // process data
-    const event = JSON.parse(e.nativeEvent.data);
+    let event = null;
+    try {
+      event = JSON.parse(e.nativeEvent.data);
+    } catch (err) {
+      return;
+    }
     console.log('MapProvider.onMessage', 'event', event);
     try {
       switch (event.type) {
@@ -69,7 +74,6 @@ export const MapProvider = (props) => {
     if (!mapRef) return;
 
     setMapMethod(MapMethods(mapRef));
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapRef]);
 
@@ -77,18 +81,21 @@ export const MapProvider = (props) => {
     <View style={containerStyle}>
       <WebView
         ref={handleWebRef}
-        source={{ html: require('./dist/bundle.js').default }}
-        userAgent="Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"
-        injectedJavaScriptObject={{
-          options,
-          isDevelopment: false,
-          awsRegion,
-          mapName,
-          authType,
-          credentials,
-          mapEventListeners,
-        }}
+        originWhitelist={['*']}
+        source={{ html: require('../dist/bundle.js').default }}
+        domStorageEnabled={true}
+        mixedContentMode="always"
+        injectedJavaScript={webviewOnloadedJs({
+          options: options,
+          mapEventListeners: mapEventListeners,
+          awsAuthentication: awsLocationService,
+        })}
+        javaScriptEnabled={true}
         onMessage={(e) => onMessage(e)}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.warn('WebView error: ', nativeEvent);
+        }}
       />
     </View>
   );
@@ -100,5 +107,6 @@ const defaultStyle = StyleSheet.create({
     height: '100%',
     width: '100%',
     margin: 20,
+    backgroundColor: '#ecf0f1',
   },
 });
