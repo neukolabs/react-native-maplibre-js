@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useMaplibreContext } from '../components/maplibre-context.jsx';
 import { MapMethods, eventManager } from './MapMethods.jsx';
