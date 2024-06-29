@@ -112,9 +112,11 @@ class Map {
 
   init(options = DEFAULT_OPTIONS) {
     try {
+      const authOptions = this._resolveAuthOptions();
       this.map = new maplibregl.Map({
         ...options,
         container: this.id,
+        ...authOptions,
       });
     } catch (err) {
       error('MapError', err.message);

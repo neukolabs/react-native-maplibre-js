@@ -30,13 +30,12 @@ function addMapEventListeners(listeners) {
   });
 }
 
-window.initMap = function (options, awsOptions = null) {
+window.initMap = function (options) {
   try {
     const params = JSON.parse(options);
-    log(options);
     map = new Map('map');
-    if (awsOptions) {
-      map.setAwsCredentials(awsOptions);
+    if (params.awsAuthentication) {
+      map.setAwsCredentials(params.awsAuthentication);
     }
     map.init(params.options);
     addMapEventListeners(params.mapEventListeners);

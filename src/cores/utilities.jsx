@@ -27,6 +27,7 @@ export const webviewOnloadedJs = (parameters) => {
           window.initMap(JSON.stringify({
             options: ${JSON.stringify(parameters.options)},
             mapEventListeners: ${JSON.stringify(parameters.mapEventListeners)},
+            awsAuthentication: ${JSON.stringify(parameters.awsAuthentication)},
           }), null);
         } catch (err) {
           window.ReactNativeWebView.postMessage(err.message);
@@ -41,6 +42,7 @@ export const webviewOnloadedJs = (parameters) => {
           window.initMap(JSON.stringify({
             options: ${JSON.stringify(parameters.options)},
             mapEventListeners: ${JSON.stringify(parameters.mapEventListeners)},
+            awsAuthentication: ${JSON.stringify(parameters.awsAuthentication)},
           }), null);
         } catch (err) {
           window.ReactNativeWebView.postMessage(err.message);

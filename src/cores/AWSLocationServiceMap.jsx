@@ -1,11 +1,11 @@
-export const MapAuthenticationType = {
+export const AwsMapAuthenticationType = {
   NONE: null,
   APIKEY: 'apiKey',
   AWS_CREDENTIALS: 'awsCredentials',
 };
 
-export const MapAuthentication = {
-  type: MapAuthenticationType.NONE,
+export const AwsMapAuthentication = {
+  type: AwsMapAuthenticationType.NONE,
   region: 'us-east-1',
   mapName: null,
   credentials: {

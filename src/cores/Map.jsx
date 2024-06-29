@@ -4,18 +4,16 @@ import { WebView } from 'react-native-webview';
 import { useMaplibreContext } from '../components/maplibre-context.jsx';
 import { MapMethods, eventManager } from './MapMethods.jsx';
 import { webviewOnloadedJs } from './utilities.jsx';
+import { AwsMapAuthentication } from './AWSLocationServiceMap.jsx';
 
 export const Map = (props) => {
   // input
   const {
     containerStyle = defaultStyle.container,
     options = null,
-    awsRegion = 'us-east-1',
-    mapName,
-    authType,
-    credentials = null,
     mapEventListeners = [],
     onMapEvent = () => {},
+    awsLocationService = AwsMapAuthentication
   } = props;
 
   // hooks
@@ -90,6 +88,7 @@ export const Map = (props) => {
         injectedJavaScript={webviewOnloadedJs({
           options: options,
           mapEventListeners: mapEventListeners,
+          awsAuthentication: awsLocationService
         })}
         javaScriptEnabled={true}
         onMessage={(e) => onMessage(e)}
