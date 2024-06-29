@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import MaplibreProvider from 'react-native-maplibre-js';
-import { useMaplibreContext } from '../../src/components/maplibre-context';
+import { Map, useMaplibreContext } from 'react-native-maplibre-js';
+// import { useMaplibreContext } from '../../src/components/maplibre-context';
 
 export default function MapView() {
   // hooks
   const { map } = useMaplibreContext();
-  const { getCenter } = map;
+  const { getCenter, setCenter } = map;
 
   const onMapEvent = (name) => {
     console.log('example.MapView@onMapEvent', name);
@@ -17,15 +17,16 @@ export default function MapView() {
 
   const run = async () => {
     console.log('example.MapView@run', 'invoked');
+    // setCenter([-74, 38])
     const center = await getCenter();
     console.log('example.MapView@run', 'run', center);
   };
 
   return (
-    <MaplibreProvider.Map
-      containerStyle={styles.map}
+    <Map
+      // containerStyle={styles.map}
       options={{
-        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=key',
+        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=Lq7r4ksjBkpu8Q8g2ERj',
         center: [101.63787, 3.14261],
         zoom: 12,
         preserveDrawingBuffer: true,
@@ -41,10 +42,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
   },
   map: {
     flex: 1,
     maxHeight: '40%',
     width: '100%',
+    backgroundColor: '#ecf0f1',
   },
 });

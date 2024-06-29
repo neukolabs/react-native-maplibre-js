@@ -1,3 +1,5 @@
+'use strict';
+
 import { log } from './logger';
 import Map from './map';
 
@@ -30,22 +32,28 @@ function addMapEventListeners(listeners) {
   });
 }
 
-window.initMap = function (options, awsOptions = null) {
+window.onload = (event) => {
   try {
-    const params = JSON.parse(options);
-    log(options);
-    map = new Map('map');
-    if (awsOptions) {
-      map.setAwsCredentials(awsOptions);
+    if (window.ReactNativeWebView.injectedObjectJson()) {
+      const params = JSON.parse(window.ReactNativeWebView.injectedObjectJson());
+      log(params)
+      map = new Map(
+        'map',
+        params.awsRegion,
+        params.mapName,
+        params.authType,
+        params.credentials
+      );
+      map.init(params.options);
+
+      addMapEventListeners(params.mapEventListeners);
     }
-    map.init(params.options);
-    addMapEventListeners(params.mapEventListeners);
   } catch (err) {
     window.ReactNativeWebView.postMessage(err.message);
   }
 };
 
-window.messageCallback = async function (e) {
+window.addEventListener('message', async (e) => {
   const event = JSON.parse(e.data);
   log('window.addEventListener@message', 'event', JSON.stringify(event));
   switch (event.type) {
@@ -82,4 +90,4 @@ window.messageCallback = async function (e) {
     }
   }
   log('window.addEventListener@message', 'completed');
-};
+});

@@ -3,9 +3,8 @@
 'use strict';
 
 import { Signer } from '@aws-amplify/core';
-import { log } from './logger';
+import { log, error } from './logger';
 
-// const
 const DEFAULT_CREDENTIALS = {
   apiKey: null,
   accessKeyId: null,
@@ -19,41 +18,45 @@ const DEFAULT_OPTIONS = {
 };
 
 class Map {
-  constructor(
-    id = 'map',
-    awsRegion = 'us-east-1',
-    mapName,
-    authType,
-    credentials = DEFAULT_CREDENTIALS
-  ) {
+  constructor(id = 'map') {
     this.id = id;
-    this.awsRegion = awsRegion;
-    this.mapName = mapName;
-    this.authType = authType;
-    this.credentials = credentials;
     this.map = null;
     this.navigationControl = null;
+    this.awsCredentials = {
+      region: 'us-east-1',
+      mapName: null,
+      authType: null,
+      credentials: DEFAULT_CREDENTIALS,
+    };
   }
 
   _resolveAuthOptions() {
-    // log(`_resolveAuthOptions: ${this.authType}`)
-    log(this.authType);
-    if (this.authType === 'apiKey') {
+    log(this.awsCredentials.authType);
+
+    /* Sanity check */
+    if (this.awsCredentials.authType === null) return {};
+
+    /* AWS Credentials API Key */
+    if (this.awsCredentials.authType === 'apiKey') {
       return {
-        style: `https://maps.geo.${this.awsRegion}.amazonaws.com/maps/v0/maps/${this.mapName}/style-descriptor?key=${this.credentials.apiKey}`,
+        style: `https://maps.geo.${this.awsCredentials.region}.amazonaws.com/maps/v0/maps/${this.awsCredentials.mapName}/style-descriptor?key=${this.awsCredentials.credentials.apiKey}`,
       };
-    } else if (this.authType === 'awsCredentials') {
+    }
+
+    /* AWS Credentials API Credetials */
+    if (this.awsCredentials.authType === 'awsCredentials') {
       return {
-        style: `https://maps.geo.${this.awsRegion}.amazonaws.com/maps/v0/maps/${this.mapName}/style-descriptor`,
+        style: `https://maps.geo.${this.awsCredentials.region}.amazonaws.com/maps/v0/maps/${this.awsCredentials.mapName}/style-descriptor`,
         transformRequest: (url, resourceType) => {
           if (url.includes('amazonaws.com')) {
             return {
               url: Signer.signUrl(
                 url,
                 {
-                  access_key: this.credentials.accessKeyId,
-                  secret_key: this.credentials.secretAccessKey,
-                  session_token: this.credentials.sessionToken,
+                  access_key: this.awsCredentials.credentials.accessKeyId,
+                  secret_key: this.awsCredentials.credentials.secretAccessKey,
+                  session_token:
+                    this.awsCredentials.credentials.sessionToken || null,
                 },
                 {
                   service: 'geo',
@@ -65,8 +68,41 @@ class Map {
           return { url };
         },
       };
-    } else {
-      return {};
+    }
+
+    return {};
+  }
+
+  setAwsCredentials({ region, mapName, authType, credentials }) {
+    try {
+      /* sanity check */
+      if (!region) throw Error('Missing AWS region');
+      if (!mapName) throw Error('Missing AWS map name');
+      if (!authType) throw Error('Missing AWS auth type');
+      if (authType && authType !== 'apiKey' && authType !== 'awsCredentials')
+        throw Error('Invalid AWS authentication type');
+      if (authType === 'apiKey') {
+        if (!credentials.apiKey) throw Error('Missing AWS API key');
+      } else if (authType === 'awsCredentials') {
+        if (!credentials.accessKeyId) throw Error('Missing AWS access key ID');
+        if (!credentials.secretAccessKey)
+          throw Error('Missing AWS secret access key');
+      }
+
+      /* set value */
+      this.awsCredentials.region = region;
+      this.awsCredentials.mapName = mapName;
+      this.awsCredentials.authType = authType;
+      this.awsCredentials.credentials = credentials;
+
+      /* update map */
+      if (!this.map) return;
+      if (this.awsCredentials.authType === null) return;
+      const authOptions = this._resolveAuthOptions();
+      this.map.setStyle(authOptions.style);
+      this.map.setTransformRequest(authOptions.transformRequest);
+    } catch (err) {
+      error('AWSCredentialsError', err.message);
     }
   }
 
@@ -75,24 +111,18 @@ class Map {
   }
 
   init(options = DEFAULT_OPTIONS) {
-    // resolve auth options
-    const authOptions = this._resolveAuthOptions();
-    // log({
-    //   ...options,
-    //   container: this.id,
-    //   ...authOptions,
-    // });
-
-    this.map = new maplibregl.Map({
-      ...options,
-      container: this.id,
-      ...authOptions,
-    });
+    try {
+      this.map = new maplibregl.Map({
+        ...options,
+        container: this.id,
+      });
+    } catch (err) {
+      error('MapError', err.message);
+    }
   }
 
   addControl(position = 'top-right') {
     try {
-      // sanity check
       if (!this.map) {
         throw new Error('Map not initialized');
       }
@@ -100,16 +130,14 @@ class Map {
       if (!this.navigationControl)
         this.navigationControl = new maplibregl.NavigationControl();
 
-      // call method
       this.map.addControl(this.navigationControl, position);
     } catch (err) {
-      log(err.message);
+      error('MapError', err.message);
     }
   }
 
   hasControl() {
     try {
-      // sanity check
       if (!this.map) {
         throw new Error('Map not initialized');
       }
@@ -118,16 +146,14 @@ class Map {
         return false;
       }
 
-      // call method
       return this.map.hasControl(this.navigationControl);
     } catch (err) {
-      log(err.message);
+      error('MapError', err.message);
     }
   }
 
   removeControl() {
     try {
-      // sanity check
       if (!this.map) {
         throw new Error('Map not initialized');
       }
@@ -136,54 +162,47 @@ class Map {
         return null;
       }
 
-      // call method
       this.map.removeControl(this.navigationControl);
       return null;
     } catch (err) {
-      log(err.message);
+      error('MapError', err.message);
     }
   }
 
   async loadImages(url) {
     try {
-      // sanity check
       if (!this.map) {
         throw new Error('Map not initialized');
       }
 
-      // call method
       await this.map.loadImages(url);
       return null;
     } catch (err) {
-      log(err.message);
+      error('MapError', err.message);
     }
   }
 
   invokeMethod(methodName, methodArgs = []) {
     try {
-      // sanity check
       if (!this.map) {
         throw new Error('Map not initialized');
       }
 
-      // call method
       this.map[methodName].apply(this.map, methodArgs);
     } catch (err) {
-      log(err.message);
+      error('MapError', err.message);
     }
   }
 
   invokeGetResponseMethod(methodName, methodArgs = []) {
     try {
-      // sanity check
       if (!this.map) {
         throw new Error('Map not initialized');
       }
 
-      // call method
       return this.map[methodName].apply(this.map, methodArgs);
     } catch (err) {
-      log(err.message);
+      error('MapError', err.message);
     }
   }
 }

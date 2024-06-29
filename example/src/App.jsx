@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import MaplibreProvider from 'react-native-maplibre-js';
+import {MaplibreProvider} from 'react-native-maplibre-js';
+// import Mapli
 import MapView from './mapview';
 
 const styles = StyleSheet.create({
