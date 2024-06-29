@@ -1,8 +1,8 @@
 export const MapAuthenticationType = {
   NONE: null,
   APIKEY: 'apiKey',
-  AWS_CREDENTIALS: 'awsCredentials'
-}
+  AWS_CREDENTIALS: 'awsCredentials',
+};
 
 export const MapAuthentication = {
   type: MapAuthenticationType.NONE,
@@ -12,6 +12,6 @@ export const MapAuthentication = {
     apiKey: null,
     accessKeyId: null,
     secretAccessKey: null,
-    sessionToken: null
-  }
-}
+    sessionToken: null,
+  },
+};

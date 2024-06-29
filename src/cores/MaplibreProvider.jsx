@@ -26,6 +26,6 @@ const MaplibreProvider = (props) => {
       {children}
     </MaplibreContext.Provider>
   );
-}
+};
 
 export default MaplibreProvider;

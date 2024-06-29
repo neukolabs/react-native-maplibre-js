@@ -40,7 +40,11 @@ export const Map = (props) => {
 
     // process data
     let event = null;
-    try { event = JSON.parse(e.nativeEvent.data); } catch (err) { return; }
+    try {
+      event = JSON.parse(e.nativeEvent.data);
+    } catch (err) {
+      return;
+    }
     console.log('MapProvider.onMessage', 'event', event);
     try {
       switch (event.type) {
@@ -78,22 +82,22 @@ export const Map = (props) => {
   return (
     <View style={containerStyle}>
       <WebView
-          ref={handleWebRef}
-          originWhitelist={["*"]}
-          source={{ html: require('../dist/bundle.js').default }}
-          domStorageEnabled={true}
-          mixedContentMode="always"
-          injectedJavaScript={webviewOnloadedJs({
-            options: options,
-            mapEventListeners: mapEventListeners
-          })}
-          javaScriptEnabled={true}
-          onMessage={(e) => onMessage(e)}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.warn('WebView error: ', nativeEvent);
-          }}
-        />
+        ref={handleWebRef}
+        originWhitelist={['*']}
+        source={{ html: require('../dist/bundle.js').default }}
+        domStorageEnabled={true}
+        mixedContentMode="always"
+        injectedJavaScript={webviewOnloadedJs({
+          options: options,
+          mapEventListeners: mapEventListeners,
+        })}
+        javaScriptEnabled={true}
+        onMessage={(e) => onMessage(e)}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.warn('WebView error: ', nativeEvent);
+        }}
+      />
     </View>
   );
 };

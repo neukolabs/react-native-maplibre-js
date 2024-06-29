@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+import { Platform } from 'react-native';
 
 /**
  * The function `makeid` generates a random alphanumeric string of a specified length.
@@ -32,7 +32,7 @@ export const webviewOnloadedJs = (parameters) => {
           window.ReactNativeWebView.postMessage(err.message);
         }
       });
-    `
+    `;
   } else {
     return `
       window.addEventListener('message', window.messageCallback);
@@ -46,6 +46,6 @@ export const webviewOnloadedJs = (parameters) => {
           window.ReactNativeWebView.postMessage(err.message);
         }
       });
-    `
-  };
+    `;
+  }
 };

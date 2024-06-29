@@ -26,7 +26,8 @@ export default function MapView() {
     <Map
       // containerStyle={styles.map}
       options={{
-        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=Lq7r4ksjBkpu8Q8g2ERj',
+        style:
+          'https://api.maptiler.com/maps/basic-v2/style.json?key=Lq7r4ksjBkpu8Q8g2ERj',
         center: [101.63787, 3.14261],
         zoom: 12,
         preserveDrawingBuffer: true,
