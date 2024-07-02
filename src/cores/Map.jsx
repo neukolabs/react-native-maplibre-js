@@ -27,6 +27,7 @@ export const Map = (props) => {
         onMapEvent(name);
         break;
       default:
+        onMapEvent(name);
         break;
     }
   };
