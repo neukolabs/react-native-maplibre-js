@@ -2,16 +2,20 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "@neukolabs/react-native-maplibre-js": ["./src/index"]
+      "@neukolabs/react-native-maplibre-js": [
+        "./src/index"
+      ]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,

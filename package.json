@@ -2,7 +2,7 @@
   "name": "@neukolabs/react-native-maplibre-js",
   "version": "1.1.0",
   "description": "A Maplibre JS wrapper for react-native",
-  "source": "./src/index.tsx",
+  "source": "./src/index.jsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
   "exports": {
@@ -157,7 +157,8 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "src/dist/bundle.js"
   ],
   "prettier": {
     "quoteProps": "consistent",
@@ -181,18 +182,15 @@
         {
           "esm": true
         }
-      ],
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json",
-          "esm": true
-        }
       ]
     ]
   },
   "create-react-native-library": {
     "type": "library",
     "version": "0.41.0"
-  }
+  },
+  "dependencies": {
+    "babel-plugin-module-resolver": "^5.0.2"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
