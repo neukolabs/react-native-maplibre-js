@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-08-27
+
+### Fixed
+
+- fix: make the code more quiet. developer can change the log flat to see log louder.
+
+### Added
+
+- feat: support for marker in the map with methods and event listeners.
+- feat: marker api documentation.
+
 ## [1.0.2] - 2024-07-02
 
 ### Fixed
@@ -15,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- feat: updated readme and guides
 - feat: updated readme and guides
 - feat: added support for aws authentication apikey and temporary credentials
 - feat: support for android

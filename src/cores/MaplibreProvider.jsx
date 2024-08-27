@@ -3,6 +3,10 @@ import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter.js'
 import MaplibreContext from '../components/maplibre-context';
 import { AwsMapAuthentication } from './AWSLocationServiceMap';
 
+if (true) {
+  console.log = () => null;
+}
+
 const MaplibreProvider = (props) => {
   // input
   const { children } = props;
