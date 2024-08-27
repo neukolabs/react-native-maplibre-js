@@ -18,6 +18,18 @@ function mapEventListenerCallback(name) {
   );
 }
 
+function markerEventListenerCallback(markerId, name) {
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({
+      type: 'markerEvent',
+      markerId: markerId,
+      payload: {
+        name,
+      },
+    })
+  );
+}
+
 function responseInvokedMethodCallback(id, paylod) {
   window.ReactNativeWebView.postMessage(
     JSON.stringify({
@@ -41,6 +53,13 @@ function responseMarkerInvokedMethodCallback(id, paylod) {
 function addMapEventListeners(listeners) {
   listeners.forEach((listener) => {
     map.on(listener, () => mapEventListenerCallback(listener));
+  });
+}
+
+function addMarkerEventListeners(markerId, marker, listeners) {
+  listeners.forEach((listener) => {
+    log(`marker ${markerId} is listening to ${listener}`);
+    marker.on(listener, () => markerEventListenerCallback(markerId, listener));
   });
 }
 
@@ -88,6 +107,7 @@ async function markerHandler(event) {
     if (_marker === undefined) {
       const marker = new Marker(markerId, _mapInstance);
       marker.init(event.arguments[0].options, event.arguments[0].coords);
+      addMarkerEventListeners(markerId, marker, event.arguments[0].eventNames);
       MARKERS.push({
         id: markerId,
         marker: marker,

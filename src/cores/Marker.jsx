@@ -4,7 +4,12 @@ import { useState, useEffect } from 'react';
 
 export const Marker = (props) => {
   // input
-  const { coords = [0, 0], options = {} } = props;
+  const {
+    coords = [0, 0],
+    options = {},
+    eventNames = [],
+    onEvent = () => {},
+  } = props;
 
   // hooks
   const { map, eventManager } = useMaplibreContext();
@@ -58,13 +63,28 @@ export const Marker = (props) => {
   useEffect(() => {
     console.log('Marker@useEffect[identifier]', 'identifier', identifier);
     if (identifier === null) return;
+
+    // create listener
+    eventNames.forEach(item => {
+      eventManager.addListener(`marker:${identifier}:${item}`, (e) => onEvent(e));
+    });
+
+    // init marker on map
     invokeGetResponse(identifier, 'init', 'invokeMarkerFunction', {
       coords: coords,
       options: options,
+      eventNames: eventNames,
     });
 
     return () => {
       console.log('Marker@useEffect[]', 'exiting', identifier);
+
+       // remove listeners
+      eventNames.forEach(item => {
+        eventManager.removeAllListeners(`marker:${identifier}:${item}`);
+      });
+
+      // remove from map
       invokeGetResponse(identifier, 'remove', 'invokeMarkerFunction', null);
     };
   }, [identifier]);

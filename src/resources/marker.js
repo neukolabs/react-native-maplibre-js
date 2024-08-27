@@ -41,6 +41,10 @@ class Marker {
       error('MarkerError', err.message);
     }
   }
+
+  on(eventName, callback) {
+    this.marker.on(eventName, callback);
+  }
 }
 
 module.exports = Marker;

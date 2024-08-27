@@ -49,6 +49,10 @@ export default function MapView() {
               draggable: true,
             }}
             coords={[101.63787, 3.14261]}
+            eventNames={['drag']}
+            onEvent={(e) => {
+              console.log('example.MapView@Marker#onEvent', e);
+            }}
           />
         )}
       </Map>

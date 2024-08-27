@@ -53,6 +53,12 @@ export const Map = (props) => {
         case 'mapEvent':
           dispatchEvent(event.payload.name);
           break;
+        case 'markerEvent':
+          eventManager.emit(
+            `marker:${event.markerId}:${event.payload.name}`,
+            event.payload
+          );
+          break;
         case 'invokeResponse':
           eventManager.emit(event.requestId, event.payload);
           break;
