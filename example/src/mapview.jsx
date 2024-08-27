@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import {
   Map,
@@ -10,6 +10,7 @@ export default function MapView() {
   // hooks
   const { map } = useMaplibreContext();
   const { getCenter, setCenter } = map;
+  const markerRef = useRef();
 
   // state
   const [showMarker, setShowMarker] = useState(true);
@@ -23,7 +24,8 @@ export default function MapView() {
 
   const run = async () => {
     console.log('example.MapView@run', 'invoked');
-    // setCenter([-74, 38])
+    // setCenter([-74, 38]);
+    // markerRef.current.setLngLat([-74, 38]);
     const center = await getCenter();
     console.log('example.MapView@run', 'run', center);
   };
@@ -44,14 +46,19 @@ export default function MapView() {
       >
         {showMarker && (
           <Marker
+            ref={markerRef}
             options={{
               color: '#ff0000',
               draggable: true,
             }}
             coords={[101.63787, 3.14261]}
-            eventNames={['drag']}
+            eventNames={['dragend']}
             onEvent={(e) => {
               console.log('example.MapView@Marker#onEvent', e);
+              const pos = markerRef.current.getLngLat();
+              console.log('example.MapView@Marker#onEvent', 'pos', pos);
+              setCenter([-74, 38]);
+              markerRef.current.setLngLat([-74, 38]);
             }}
           />
         )}

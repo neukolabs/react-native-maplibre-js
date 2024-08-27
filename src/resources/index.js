@@ -117,6 +117,11 @@ async function markerHandler(event) {
         log('enter remove');
         _marker.marker.remove();
         MARKERS = MARKERS.filter((item) => item.id !== markerId);
+      } else {
+        res = _marker.marker.invokeGetResponseMethod(
+          event.functionName,
+          event.arguments
+        );
       }
     }
     responseMarkerInvokedMethodCallback(event.requestId, res);

@@ -1,8 +1,8 @@
 import { makeid } from './utilities';
 import { useMaplibreContext } from '../components/maplibre-context';
-import { useState, useEffect } from 'react';
+import { forwardRef, useState, useEffect, useImperativeHandle } from 'react';
 
-export const Marker = (props) => {
+export const Marker = forwardRef((props, ref) => {
   // input
   const {
     coords = [0, 0],
@@ -32,7 +32,6 @@ export const Marker = (props) => {
     // generate random id
     const id = makeid(24);
     console.log('Marker@invokeGetResponse', markerId, id, name, args);
-    console.log('Marker@invokeGetResponse', 'eventManager', eventManager);
 
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -58,6 +57,182 @@ export const Marker = (props) => {
       );
     });
   };
+
+  // methods for marker
+  useImperativeHandle(ref, () => ({
+    async addClassName(className) {
+      return await invokeGetResponse(
+        identifier,
+        'addControl',
+        'invokeMarkerFunction',
+        className
+      );
+    },
+    async getElement() {
+      return await invokeGetResponse(
+        identifier,
+        'getElement',
+        'invokeMarkerFunction'
+      );
+    },
+    async getLngLat() {
+      return await invokeGetResponse(
+        identifier,
+        'getLngLat',
+        'invokeMarkerFunction'
+      );
+    },
+    async getOffset() {
+      return await invokeGetResponse(
+        identifier,
+        'getOffset',
+        'invokeMarkerFunction'
+      );
+    },
+    async getPitchAlignment() {
+      return await invokeGetResponse(
+        identifier,
+        'getPitchAlignment',
+        'invokeMarkerFunction'
+      );
+    },
+    async getPopup() {
+      return await invokeGetResponse(
+        identifier,
+        'getPopup',
+        'invokeMarkerFunction'
+      );
+    },
+    async getRotation() {
+      return await invokeGetResponse(
+        identifier,
+        'getRotation',
+        'invokeMarkerFunction'
+      );
+    },
+    async getRotationAlignment() {
+      return await invokeGetResponse(
+        identifier,
+        'getRotationAlignment',
+        'invokeMarkerFunction'
+      );
+    },
+    async isDraggable() {
+      return await invokeGetResponse(
+        identifier,
+        'isDraggable',
+        'invokeMarkerFunction'
+      );
+    },
+    async listens() {
+      return await invokeGetResponse(
+        identifier,
+        'listens',
+        'invokeMarkerFunction'
+      );
+    },
+    async removeClassName(className) {
+      return await invokeGetResponse(
+        identifier,
+        'removeClassName',
+        'invokeMarkerFunction',
+        className
+      );
+    },
+    async setDraggable(shouldBeDraggable) {
+      return await invokeGetResponse(
+        identifier,
+        'setDraggable',
+        'invokeMarkerFunction',
+        shouldBeDraggable
+      );
+    },
+    async setEventedParent(parent, data = {}) {
+      return await invokeGetResponse(
+        identifier,
+        'setEventedParent',
+        'invokeMarkerFunction',
+        parent,
+        data
+      );
+    },
+    async setLngLat(lnglat) {
+      return await invokeGetResponse(
+        identifier,
+        'setLngLat',
+        'invokeMarkerFunction',
+        lnglat
+      );
+    },
+    async setOffset(offset) {
+      return await invokeGetResponse(
+        identifier,
+        'setOffset',
+        'invokeMarkerFunction',
+        offset
+      );
+    },
+    async setOpacity(opacity, opacityWhenCovered) {
+      return await invokeGetResponse(
+        identifier,
+        'setOpacity',
+        'invokeMarkerFunction',
+        opacity,
+        opacityWhenCovered
+      );
+    },
+    async setPitchAlignment(alignment) {
+      return await invokeGetResponse(
+        identifier,
+        'setPitchAlignment',
+        'invokeMarkerFunction',
+        alignment
+      );
+    },
+    /* TODO - To support in next release with Popup class */
+    // async setPopup(popup) {
+    //   return await invokeGetResponse(identifier, 'setPopup', 'invokeMarkerFunction', popup);
+    // },
+    async setRotation(rotation) {
+      return await invokeGetResponse(
+        identifier,
+        'setRotation',
+        'invokeMarkerFunction',
+        rotation
+      );
+    },
+    async setRotationAlignment(alignment) {
+      return await invokeGetResponse(
+        identifier,
+        'setRotationAlignment',
+        'invokeMarkerFunction',
+        alignment
+      );
+    },
+    async setSubpixelPositioning(value) {
+      return await invokeGetResponse(
+        identifier,
+        'setSubpixelPositioning',
+        'invokeMarkerFunction',
+        value
+      );
+    },
+    async toggleClassName(className) {
+      return await invokeGetResponse(
+        identifier,
+        'toggleClassName',
+        'invokeMarkerFunction',
+        className
+      );
+    },
+    async togglePopup() {
+      return await invokeGetResponse(
+        identifier,
+        'togglePopup',
+        'invokeMarkerFunction'
+      );
+    },
+  }));
 
   /* eslint-disable */
   useEffect(() => {
@@ -97,4 +272,4 @@ export const Marker = (props) => {
   }, [loaded]);
 
   return null;
-};
+});
