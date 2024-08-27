@@ -9,7 +9,9 @@ A Maplibre JS wrapper for react-native. The package uses Javascript APIs to help
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
-- [Guides](./docs/Map.md)
+- Guides
+- - [Map API Documentation](./docs/Map.md)
+- - [Marker API Documentation](./docs/Marker.md)
 - [Motivation](#motivation)
 - [Contribution](#contributing)
 
