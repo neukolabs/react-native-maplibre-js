@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useMaplibreContext } from '../components/maplibre-context.jsx';
-import { MapMethods, eventManager } from './MapMethods.jsx';
+import { MapMethods } from './MapMethods.jsx';
 import { webviewOnloadedJs } from './utilities.jsx';
 import { AwsMapAuthentication } from './AWSLocationServiceMap.jsx';
 
@@ -14,10 +14,11 @@ export const Map = (props) => {
     mapEventListeners = [],
     onMapEvent = () => {},
     awsLocationService = AwsMapAuthentication,
+    children,
   } = props;
 
   // hooks
-  const { map } = useMaplibreContext();
+  const { map, eventManager } = useMaplibreContext();
   const { mapRef, setMapRef, setLoaded, setMapMethod } = map;
 
   const dispatchEvent = (name) => {
@@ -55,6 +56,9 @@ export const Map = (props) => {
         case 'invokeResponse':
           eventManager.emit(event.requestId, event.payload);
           break;
+        case 'invokeMarkerResponse':
+          eventManager.emit(event.requestId, event.payload);
+          break;
         default:
           break;
       }
@@ -73,7 +77,7 @@ export const Map = (props) => {
     // sanity check
     if (!mapRef) return;
 
-    setMapMethod(MapMethods(mapRef));
+    setMapMethod(MapMethods(mapRef, eventManager));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapRef]);
 
@@ -96,7 +100,9 @@ export const Map = (props) => {
           const { nativeEvent } = syntheticEvent;
           console.warn('WebView error: ', nativeEvent);
         }}
-      />
+      >
+        {children}
+      </WebView>
     </View>
   );
 };

@@ -1,8 +1,7 @@
-import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter.js';
 import { makeid } from './utilities';
 
 // global
-export const eventManager = new EventEmitter();
+// export const eventManager = new EventEmitter();
 
 /* This code snippet is defining a constant object `CONTROL_POSITION` using `Object.freeze()`. The
 object contains properties with specific string values representing different control positions:
@@ -15,7 +14,7 @@ export const CONTROL_POSITION = Object.freeze({
   BOTTOM_LEFT: 'bottom-left',
 });
 
-export const MapMethods = (mapRef) => {
+export const MapMethods = (mapRef, eventManager) => {
   /**
    * The function `invokeGetResponse` asynchronously sends a request with a function name and
    * arguments, listens for a response, and resolves with the received parameters.
@@ -32,6 +31,7 @@ export const MapMethods = (mapRef) => {
       }, 2000);
 
       eventManager.addListener(id, (params) => {
+        console.log('MapMethods.eventManager#addListener', id, params);
         clearTimeout(timeout);
         eventManager.removeAllListeners(id);
         resolve(params);

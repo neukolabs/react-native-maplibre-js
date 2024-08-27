@@ -1,7 +1,5 @@
 /* global maplibregl */
 
-'use strict';
-
 import { Signer } from '@aws-amplify/core';
 import { log, error } from './logger';
 
@@ -28,6 +26,10 @@ class Map {
       authType: null,
       credentials: DEFAULT_CREDENTIALS,
     };
+  }
+
+  _getMapInstance() {
+    return this.map;
   }
 
   _resolveAuthOptions() {

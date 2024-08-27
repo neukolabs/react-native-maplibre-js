@@ -40,7 +40,7 @@
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
+    "lint:fix": "eslint --fix \"**/*.{js,ts,tsx}\" .",
     "build": "npx webpack && mkdir -p ./src/dist && node ./scripts/prepack.js",
     "clean": "del-cli lib",
     "prepare": "bob build",
