@@ -245,11 +245,13 @@ export const Marker = forwardRef((props, ref) => {
     });
 
     // init marker on map
-    invokeGetResponse(identifier, 'init', 'invokeMarkerFunction', {
-      coords: coords,
-      options: options,
-      eventNames: eventNames,
-    });
+    setTimeout(() => {
+      invokeGetResponse(identifier, 'init', 'invokeMarkerFunction', {
+        coords: coords,
+        options: options,
+        eventNames: eventNames,
+      });
+    }, 500);
 
     return () => {
       console.log('Marker@useEffect[]', 'exiting', identifier);
