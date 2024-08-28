@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useMaplibreContext } from '../components/maplibre-context.jsx';
-import { MapMethods } from './MapMethods.jsx';
-import { webviewOnloadedJs } from './utilities.jsx';
-import { AwsMapAuthentication } from './AWSLocationServiceMap.jsx';
+import { useMaplibreContext } from '../components/maplibre-context';
+import { MapMethods } from './MapMethods';
+import { webviewOnloadedJs } from './utilities';
+import { AwsMapAuthentication } from './AWSLocationServiceMap';
 
 export const Map = (props) => {
   // input
