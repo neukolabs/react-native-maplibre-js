@@ -4,105 +4,35 @@ For most of the methods, please refer the [documentation](https://maplibre.org/m
 
 ## Usage
 
-Import hook **useMaplibreContext** and spread from map
+Set ref to the MaplibreMap and now the ref is exposed with the methods as in the API document.
 
 ```js
-import { useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
+import { useRef } from 'react';
+import { MaplibreMap } from '@neukolabs/react-native-maplibre-js';
 
 export default function MyComponent() {
   // hooks
-  const { map } = useMaplibreContext();
-  const { setCenter, getCenter } = map;
+  const mapRef = useRef();
 
-  // the rest of the component
-}
-```
-
-For action methods such as setCenter, flyTo and etc, you can call as in JS API.
-
-```js
-import { useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
-
-export default function MyComponent() {
-  // hooks
-  const { map } = useMaplibreContext();
-  const { setCenter } = map;
-
-  const myFunction = () => {
-    setCenter([0, 0]);
-  }
-
-  // the rest of the component
-}
-```
-
-For query methods such as getCenter, hasControl and etc, use **async/await**. This is also applicable for **loadImages** methods
-
-```js
-import { useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
-
-export default function MyComponent() {
-  // hooks
-  const { map } = useMaplibreContext();
-  const { getCenter, loadImages } = map;
-
-  const myFunction = async () => {
-    await loadImages('https://domain.com/image.png');
-    // then do other things
-
-    // other example
-    const center = await getCenter();
-  }
-
-  // the rest of the component
-}
-```
-
-## Important
-
-[!IMPORTANT]
-All methods must be used after map has been loaded.
-
-```js
-import { useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
-
-export default function MyComponent() {
-  // hooks
-  const { map } = useMaplibreContext();
-  const { setCenter } = map;
-
-  // states
-  const [mapLoaded, setMapLoaded] = useState(false);
-
-  const myFunction = () => {
-    setCenter([0, 0]);
-  }
-
-  const onMapEvent = (eventName) => {
-    console.log(eventName);
-    if (eventName === 'load') {
-      setMapLoaded(true)
+  const onMapEvent = async (eventName) => {
+    if (eventName === 'dragend') {
+      const center = await mapRef.current.getCenter();
+      console.log(center);
+      // output {"lat": some number, "lng": some number}
     }
   };
 
-  useEffect(() => {
-    // sanity check
-    if (!mapLoaded) return;
-
-    myFunction();
-    
-  }, [mapLoaded])
-
   return (
-    <Map
+    <MaplibreMap
       containerStyle={styles.map}
+      ref={mapRef}
       options={{
         style:
           'https://api.maptiler.com/maps/basic-v2/style.json?key=you-maptiler-key',
         center: [101.63787, 3.14261],
         zoom: 12,
       }}
-      mapEventListeners={['load']}
+      mapEventListeners={['dragend']}
       onMapEvent={onMapEvent}
     />
   );

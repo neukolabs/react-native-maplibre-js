@@ -13,10 +13,8 @@ Marker must be a child of a Map component.
 import { useState, useRef } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { 
-  MaplibreProvider,
-  Map,
+  MaplibreMap,
   Marker,
-  useMaplibreContext,
 } from '@neukolabs/react-native-maplibre-js';
   
 const styles = StyleSheet.create({
@@ -41,37 +39,33 @@ export default function MyComponent() {
 
   return (
     <View style={styles.container}>
-      <MaplibreProvider>
-        <Map
-          containerStyle={styles.map}
+      <MaplibreMap
+        containerStyle={styles.map}
+        options={{
+          style:
+            'https://api.maptiler.com/maps/basic-v2/style.json?key=map_api_key',
+          center: [101.63787, 3.14261],
+          zoom: 12,
+          preserveDrawingBuffer: true,
+        }}
+      >
+        <Marker
+          ref={markerRef}
           options={{
-            style:
-              'https://api.maptiler.com/maps/basic-v2/style.json?key=map_api_key',
-            center: [101.63787, 3.14261],
-            zoom: 12,
-            preserveDrawingBuffer: true,
+            color: '#ff0000',
+            draggable: true,
           }}
-          mapEventListeners={['load']}
-          onMapEvent={onMapEvent}
-        >
-          <Marker
-            ref={markerRef}
-            options={{
-              color: '#ff0000',
-              draggable: true,
-            }}
-            coords={[101.63787, 3.14261]}
-            eventNames={['dragend']}
-            onEvent={(e) => {
-              console.log(e);
+          coords={[101.63787, 3.14261]}
+          eventNames={['dragend']}
+          onEvent={(e) => {
+            console.log(e);
 
-              // example to access marker methods
-              const pos = markerRef.current.getLngLat();
-              console.log(pos);
-            }}
-          />
-        </Map>
-      </MaplibreProvider>
+            // example to access marker methods
+            const pos = markerRef.current.getLngLat();
+            console.log(pos);
+          }}
+        />
+      </MaplibreMap>
     </View>
   );
 }
@@ -84,8 +78,8 @@ export default function MyComponent() {
   // hooks
   const markerRef = useRef();
 
-  const myFunction = () => {
-    markerRef.current.setLngLat([123, 58]);
+  const myFunction = async () => {
+    await markerRef.current.setLngLat([123, 58]);
   }
 
   // the rest of the component
@@ -99,7 +93,7 @@ export default function MyComponent() {
   // hooks
   const markerRef = useRef();
 
-  const myFunction = async() => {
+  const myFunction = async () => {
     const position = await markerRef.current.getLngLat();
   }
 

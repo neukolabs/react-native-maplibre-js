@@ -134,7 +134,7 @@ window.initMap = function (options) {
   try {
     const params = JSON.parse(options);
     map = new Map('map');
-    if (params.awsAuthentication) {
+    if (params.awsAuthentication && params.awsAuthentication.type !== null) {
       map.setAwsCredentials(params.awsAuthentication);
     }
     map.init(params.options);

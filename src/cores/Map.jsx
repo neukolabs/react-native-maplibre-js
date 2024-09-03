@@ -33,7 +33,7 @@ export const Map = (props) => {
   };
 
   const onMessage = (e) => {
-    // console.log('MapProvider.onMessage', 'e', e);
+    // // console.log('MapProvider.onMessage', 'e', e);
     // sanity check
     if (!e.nativeEvent.data || e.nativeEvent.data === 'undefined') return;
 
@@ -44,11 +44,11 @@ export const Map = (props) => {
     } catch (err) {
       return;
     }
-    console.log('MapProvider.onMessage', 'event', event);
+    // console.log('MapProvider.onMessage', 'event', event);
     try {
       switch (event.type) {
         case 'log':
-          console.log(event.payload.message);
+          // console.log(event.payload.message);
           break;
         case 'mapEvent':
           dispatchEvent(event.payload.name);
@@ -69,7 +69,7 @@ export const Map = (props) => {
           break;
       }
     } catch (err) {
-      console.error('MapProvider.onMessage', err);
+      // console.error('MapProvider.onMessage', err);
     }
   };
 
@@ -104,7 +104,7 @@ export const Map = (props) => {
         onMessage={(e) => onMessage(e)}
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
-          console.warn('WebView error: ', nativeEvent);
+          // console.warn('WebView error: ', nativeEvent);
         }}
       >
         {children}
