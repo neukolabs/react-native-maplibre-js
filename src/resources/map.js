@@ -191,8 +191,8 @@ class Map {
       if (!this.map) {
         throw new Error('Map not initialized');
       }
-
       this.map[methodName].apply(this.map, methodArgs);
+      return null;
     } catch (err) {
       error('MapError', err.message);
     }
