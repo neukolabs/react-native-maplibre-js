@@ -11,8 +11,12 @@ export default function MapView() {
   // state
   const [showMarker, setShowMarker] = useState(true);
 
-  const onMaploaded = () => {
-    console.debug('example.MapView@onMaploaded');
+  const onMaploaded = async () => {
+    try {
+      console.debug('example.MapView@onMaploaded');
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   const onMapEvent = async (name) => {
@@ -37,11 +41,11 @@ export default function MapView() {
         options={{
           style:
             'https://api.maptiler.com/maps/basic-v2/style.json?key=you-maptiler-key',
-          center: [101.63787, 3.14261],
+          center: [100.532497, 5.694381],
           zoom: 12,
           preserveDrawingBuffer: true,
         }}
-        mapEventListeners={['load', 'dragend']}
+        // mapEventListeners={['load', 'dragend']}
         onMapEvent={onMapEvent}
         onMapLoadedEvent={(e) => onMaploaded()}
       >
@@ -51,7 +55,7 @@ export default function MapView() {
             color: '#ff0000',
             draggable: true,
           }}
-          coords={[101.63787, 3.14261]}
+          coords={[100.532497, 5.694381]}
           eventNames={['dragend']}
           onEvent={async (e) => {
             console.log('example.MapView@Marker#onEvent', e);

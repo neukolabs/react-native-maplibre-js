@@ -123,12 +123,12 @@ export const MaplibreMap = forwardRef((props, ref) => {
   const invokeGetResponse = async (name, ...args) => {
     // generate random id
     const id = makeid(24);
-    // console.debug('MaplibreMap@invokeGetResponse', id, name, args);
+    console.debug('MaplibreMap@invokeGetResponse', id, name, args);
 
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject('MapMethodTimeoutError');
-      }, 2000);
+      }, 3000);
 
       eventManager.addListener(id, (params) => {
         // console.debug('MaplibreMap.eventManager#addListener', id, params);
@@ -149,21 +149,55 @@ export const MaplibreMap = forwardRef((props, ref) => {
     });
   };
 
+  /**
+   * The `invokeFunction` function asynchronously invokes a specified function with arguments and
+   * returns a promise that resolves with the result.
+   * @returns The `invokeFunction` function is returning a Promise.
+   */
+  const invokeFunction = async (name, ...args) => {
+    // generate random id
+    const id = makeid(24);
+    // console.debug('MaplibreMap@invokeFunction', id, name, args);
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject('MapMethodTimeoutError');
+      }, 3000);
+
+      eventManager.addListener(id, (params) => {
+        // console.debug('MaplibreMap.eventManager#addListener', id, params);
+        clearTimeout(timeout);
+        eventManager.removeAllListeners(id);
+        resolve(params);
+      });
+
+      // send data
+      mapRef.current.postMessage(
+        JSON.stringify({
+          type: 'invokeMapFunction',
+          functionName: name,
+          arguments: [...args],
+          requestId: id,
+        })
+      );
+    });
+  };
+
   useImperativeHandle(ref, () => ({
     async addControl(position = CONTROL_POSITION.TOP_RIGHT) {
-      return await invokeGetResponse('addControl', position);
+      return await invokeFunction('addControl', position);
     },
     async addImage(name = '', image = null, _options = {}) {
-      return await invokeGetResponse('addImage', name, image, _options);
+      return await invokeFunction('addImage', name, image, _options);
     },
     async addLayer(layer = {}, beforeId = null) {
-      return await invokeGetResponse('addLayer', layer, beforeId);
+      return await invokeFunction('addLayer', layer, beforeId);
     },
     async addSource(id = '', source = {}) {
-      return await invokeGetResponse('addSource', id, source);
+      return await invokeFunction('addSource', id, source);
     },
     async addSprite(id, url, _options = {}) {
-      return await invokeGetResponse('addSprite', id, url, _options);
+      return await invokeFunction('addSprite', id, url, _options);
     },
     async areTilesLoaded() {
       return await invokeGetResponse('areTilesLoaded');
@@ -172,10 +206,10 @@ export const MaplibreMap = forwardRef((props, ref) => {
       return await invokeGetResponse('cameraForBounds', bounds, _options);
     },
     async easeTo(_options = {}, eventData = null) {
-      return await invokeGetResponse('easeTo', _options, eventData);
+      return await invokeFunction('easeTo', _options, eventData);
     },
     async fitBounds(bounds, _options = {}, eventData = null) {
-      return await invokeGetResponse('fitBounds', bounds, _options, eventData);
+      return await invokeFunction('fitBounds', bounds, _options, eventData);
     },
     async fitScreenCoordinates(
       p0,
@@ -184,7 +218,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
       _options = {},
       eventData = null
     ) {
-      return await invokeGetResponse(
+      return await invokeFunction(
         'fitScreenCoordinates',
         p0,
         p1,
@@ -194,7 +228,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
       );
     },
     async flyTo(coordinate = [0, 0], eventData = null) {
-      return await invokeGetResponse('flyTo', coordinate, eventData);
+      return await invokeFunction('flyTo', coordinate, eventData);
     },
     async getBearing() {
       return await invokeGetResponse('getBearing');
@@ -312,7 +346,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
       return await invokeGetResponse('isZooming');
     },
     async jumpTo(_options = {}, eventData = null) {
-      return await invokeGetResponse('jumpTo', _options, eventData);
+      return await invokeFunction('jumpTo', _options, eventData);
     },
     async listImages() {
       return await invokeGetResponse('listImages');
@@ -327,13 +361,13 @@ export const MaplibreMap = forwardRef((props, ref) => {
       return await invokeGetResponse('loaded');
     },
     async moveLayer(id, beforeId) {
-      return await invokeGetResponse('moveLayer', id, beforeId);
+      return await invokeFunction('moveLayer', id, beforeId);
     },
     async panBy(offset, _options = {}, eventData = null) {
-      return await invokeGetResponse('panBy', offset, _options, eventData);
+      return await invokeFunction('panBy', offset, _options, eventData);
     },
     async panTo(lnglat, _options = {}, eventData = null) {
-      return await invokeGetResponse('panTo', lnglat, _options, eventData);
+      return await invokeFunction('panTo', lnglat, _options, eventData);
     },
     async project(lnglat) {
       return await invokeGetResponse('project', lnglat);
@@ -356,61 +390,61 @@ export const MaplibreMap = forwardRef((props, ref) => {
       return await invokeGetResponse('queryTerrainElevation', lngLatLike);
     },
     async redraw() {
-      return await invokeGetResponse('redraw');
+      return await invokeFunction('redraw');
     },
     async remove() {
-      return await invokeGetResponse('remove');
+      return await invokeFunction('remove');
     },
     async removeControl() {
-      return await invokeGetResponse('removeControl');
+      return await invokeFunction('removeControl');
     },
     async removeFeatureState(target, key = null) {
-      return await invokeGetResponse('removeFeatureState', target, key);
+      return await invokeFunction('removeFeatureState', target, key);
     },
     async removeImage(id) {
-      return await invokeGetResponse('removeImage', id);
+      return await invokeFunction('removeImage', id);
     },
     async removeLayer(id) {
-      return await invokeGetResponse('removeLayer', id);
+      return await invokeFunction('removeLayer', id);
     },
     async removeSource(id) {
-      return await invokeGetResponse('removeSource', id);
+      return await invokeFunction('removeSource', id);
     },
     async removeSprite(id) {
-      return await invokeGetResponse('removeSprite', id);
+      return await invokeFunction('removeSprite', id);
     },
     async resetNorth(_options = {}, eventData = null) {
-      return await invokeGetResponse('resetNorth', _options, eventData);
+      return await invokeFunction('resetNorth', _options, eventData);
     },
     async resetNorthPitch(_options = {}, eventData = null) {
-      return await invokeGetResponse('resetNorthPitch', _options, eventData);
+      return await invokeFunction('resetNorthPitch', _options, eventData);
     },
     async resize(eventData = null) {
-      return await invokeGetResponse('resize', eventData);
+      return await invokeFunction('resize', eventData);
     },
     async rotateTo(bearing, _options = {}, eventData = null) {
-      return await invokeGetResponse('rotateTo', bearing, _options, eventData);
+      return await invokeFunction('rotateTo', bearing, _options, eventData);
     },
     async setBearing(bearing, eventData = null) {
-      return await invokeGetResponse('setBearing', bearing, eventData);
+      return await invokeFunction('setBearing', bearing, eventData);
     },
     async setCenter(center, eventData = null) {
-      return await invokeGetResponse('setCenter', center, eventData);
+      return await invokeFunction('setCenter', center, eventData);
     },
     // async setEventedParent(parent = null, data = null) {
     //   return await invokeGetResponse('setEventedParent', parent, data);
     // },
     async setFeatureState(feature, state) {
-      return await invokeGetResponse('setFeatureState', feature, state);
+      return await invokeFunction('setFeatureState', feature, state);
     },
     async setFilter(layerId, filter = {}, _options = {}) {
-      return await invokeGetResponse('setFilter', layerId, filter, _options);
+      return await invokeFunction('setFilter', layerId, filter, _options);
     },
     async setGlyphs(glyphsUrl, _options) {
-      return await invokeGetResponse('setGlyphs', glyphsUrl, _options);
+      return await invokeFunction('setGlyphs', glyphsUrl, _options);
     },
     async setLayerZoomRange(layerId, minzoom, maxzoom) {
-      return await invokeGetResponse(
+      return await invokeFunction(
         'setLayerZoomRange',
         layerId,
         minzoom,
@@ -418,7 +452,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
       );
     },
     async setLayoutProperty(layerId, name, value, _options) {
-      return await invokeGetResponse(
+      return await invokeFunction(
         'setLayoutProperty',
         layerId,
         name,
@@ -427,28 +461,28 @@ export const MaplibreMap = forwardRef((props, ref) => {
       );
     },
     async setLight(light, _options) {
-      return await invokeGetResponse('setLight', light, _options);
+      return await invokeFunction('setLight', light, _options);
     },
     async setMaxBounds(bounds) {
-      return await invokeGetResponse('setMaxBounds', bounds);
+      return await invokeFunction('setMaxBounds', bounds);
     },
     async setMaxPitch(maxPitch) {
-      return await invokeGetResponse('setMaxPitch', maxPitch);
+      return await invokeFunction('setMaxPitch', maxPitch);
     },
     async setMaxZoom(maxZoom) {
-      return await invokeGetResponse('setMaxZoom', maxZoom);
+      return await invokeFunction('setMaxZoom', maxZoom);
     },
     async setMinPitch(minPitch) {
-      return await invokeGetResponse('setMinPitch', minPitch);
+      return await invokeFunction('setMinPitch', minPitch);
     },
     async setMinZoom(minZoom) {
-      return await invokeGetResponse('setMinZoom', minZoom);
+      return await invokeFunction('setMinZoom', minZoom);
     },
     async setPadding(padding, eventData = null) {
-      return await invokeGetResponse('setPadding', padding, eventData);
+      return await invokeFunction('setPadding', padding, eventData);
     },
     async setPaintProperty(layerId, name, value, _options) {
-      return await invokeGetResponse(
+      return await invokeFunction(
         'setPaintProperty',
         layerId,
         name,
@@ -457,37 +491,37 @@ export const MaplibreMap = forwardRef((props, ref) => {
       );
     },
     async setPitch(pitch, eventData = null) {
-      return await invokeGetResponse('setPitch', pitch, eventData);
+      return await invokeFunction('setPitch', pitch, eventData);
     },
     async setPixelRatio(pixelRatio) {
-      return await invokeGetResponse('setPixelRatio', pixelRatio);
+      return await invokeFunction('setPixelRatio', pixelRatio);
     },
     async setRenderWorldCopies(renderWorldCopies) {
-      return await invokeGetResponse('setRenderWorldCopies', renderWorldCopies);
+      return await invokeFunction('setRenderWorldCopies', renderWorldCopies);
     },
     async setSprite(spriteUrl, _options) {
-      return await invokeGetResponse('setSprite', spriteUrl, _options);
+      return await invokeFunction('setSprite', spriteUrl, _options);
     },
     async setStyle(style, _options) {
-      return await invokeGetResponse('setStyle', style, _options);
+      return await invokeFunction('setStyle', style, _options);
     },
     async setTerrain(_options) {
-      return await invokeGetResponse('setTerrain', _options);
+      return await invokeFunction('setTerrain', _options);
     },
     async setTransformRequest(transformRequest) {
-      return await invokeGetResponse('setTransformRequest', transformRequest);
+      return await invokeFunction('setTransformRequest', transformRequest);
     },
     async setZoom(zoom, eventData = null) {
-      return await invokeGetResponse('setZoom', zoom, eventData);
+      return await invokeFunction('setZoom', zoom, eventData);
     },
     async snapToNorth(_options = {}, eventData = null) {
-      return await invokeGetResponse('snapToNorth', _options, eventData);
+      return await invokeFunction('snapToNorth', _options, eventData);
     },
     async stop() {
-      return await invokeGetResponse('stop');
+      return await invokeFunction('stop');
     },
     async triggerRepaint() {
-      return await invokeGetResponse('triggerRepaint');
+      return await invokeFunction('triggerRepaint');
     },
 
     async unproject(point) {
@@ -495,19 +529,19 @@ export const MaplibreMap = forwardRef((props, ref) => {
     },
 
     async updateImage(id, image) {
-      return await invokeGetResponse('updateImage', id, image);
+      return await invokeFunction('updateImage', id, image);
     },
 
     async zoomIn(_options = {}, eventData = null) {
-      return await invokeGetResponse('zoomIn', _options, eventData);
+      return await invokeFunction('zoomIn', _options, eventData);
     },
 
     async zoomOut(_options = {}, eventData = null) {
-      return await invokeGetResponse('zoomOut', _options, eventData);
+      return await invokeFunction('zoomOut', _options, eventData);
     },
 
     async zoomTo(zoom = 12, _options = {}, eventData = null) {
-      return await invokeGetResponse('zoomTo', zoom, _options, eventData);
+      return await invokeFunction('zoomTo', zoom, _options, eventData);
     },
   }));
 

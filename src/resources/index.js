@@ -65,9 +65,12 @@ function addMarkerEventListeners(markerId, marker, listeners) {
 
 async function mapHandler(event) {
   try {
-    if (event.functionName.toUpperCase() === 'ADDCONTROL')
+    if (event.functionName.toUpperCase() === 'ADDCONTROL') {
       map.addControl(event.arguments[0]);
-    else map.invokeMethod(event.functionName, event.arguments);
+    } else {
+      map.invokeMethod(event.functionName, event.arguments);
+    }
+    responseInvokedMethodCallback(event.requestId, null);
   } catch (err) {
     error(err);
   }
