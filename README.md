@@ -49,56 +49,37 @@ This library uses [react-native-webview](https://github.com/react-native-webview
 
 For additional information for the package linkage, please refer to the package instruction.
 
-## Usage
+## Minimal usage
 
-### Step 1: Wrap Maplibre Provider
-
-Usually in App.js
-```js
-import { MaplibreProvider } from '@neukolabs/react-native-maplibre-js';
-
-export default function App() {
-  return (
-    ...
-      <MaplibreProvider>
-        // .. more providers and childrens
-      </MaplibreProvider>
-    ...
-  );
-}
-```
-
-### Step 2: Call Map in your component
+### Step 1: Call MaplibreMap in your component
 
 ```js
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet } from 'react-native';
-import { Map, useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
+import { MaplibreMap } from '@neukolabs/react-native-maplibre-js';
 
 export default function MapView() {
   // hooks
-  const { map } = useMaplibreContext();
-  const { setCenter } = map;
+  const mapRef = useRef();
 
-  const onMapEvent = (eventName) => {
-    console.log(eventName);
-    if (eventName === 'load') {
-      // let's go to other place
-      setCenter([-74, 38]);
-    }
+  const onMaploaded = async (e) => {
+    console.log('map is loaded');
+    
+    // let's go to the ocean
+      await mapRef.current.setCenter([-74, 38]);
   };
 
   return (
-    <Map
+    <MaplibreMap
       containerStyle={styles.map}
+      ref={mapRef}
       options={{
         style:
           'https://api.maptiler.com/maps/basic-v2/style.json?key=you-maptiler-key',
         center: [101.63787, 3.14261],
         zoom: 12,
       }}
-      mapEventListeners={['load']}
-      onMapEvent={onMapEvent}
+      onMapLoadedEvent={(e) => onMaploaded()}
     />
   );
 }
@@ -114,30 +95,38 @@ const styles = StyleSheet.create({
 
 ## Examples
 
-### 1. Get current map center coordinates
+### 1. Get current map center coordinates after drag
+
+Watch for props **mapEventListeners** to listen for event.
 
 ```js
-import { Map, useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
+import { useRef } from 'react';
+import { MaplibreMap } from '@neukolabs/react-native-maplibre-js';
 
 export default function MapView() {
   // hooks
-  const { map } = useMaplibreContext();
-  const { getCenter } = map;
+  const mapRef = useRef();
 
   const onMapEvent = async (eventName) => {
-    console.log(eventName);
-    if (eventName === 'load') {
-
-      const center = await getCenter();
-
+    if (eventName === 'dragend') {
+      const center = await mapRef.current.getCenter();
       console.log(center);
-      // output {"lat": 3.14261, "lng": 101.63787}
+      // output {"lat": some number, "lng": some number}
     }
   };
 
   return (
-    <Map
-      ...props
+    <MaplibreMap
+      containerStyle={styles.map}
+      ref={mapRef}
+      options={{
+        style:
+          'https://api.maptiler.com/maps/basic-v2/style.json?key=you-maptiler-key',
+        center: [101.63787, 3.14261],
+        zoom: 12,
+      }}
+      mapEventListeners={['dragend']}
+      onMapEvent={onMapEvent}
     />
   );
 }
@@ -146,24 +135,18 @@ export default function MapView() {
 ### 2 (a). AWS Location Service using API Key
 
 ```js
-import { Map, useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
+import { MaplibreMap } from '@neukolabs/react-native-maplibre-js';
 
 export default function MapView() {
 
-  const onMapEvent = async (eventName) => {
-    // 
-  };
-
   return (
-    <Map
+    <MaplibreMap
       containerStyle={styles.map}
       options={{
         center: [101.63787, 3.14261],
         zoom: 12,
         preserveDrawingBuffer: true,
       }}
-      mapEventListeners={['load']}
-      onMapEvent={onMapEvent}
       awsLocationService={{
         // Your map's region
         region: 'us-east-1', 
@@ -185,24 +168,18 @@ export default function MapView() {
 ### 2 (b). AWS Location Service using AWS Tempory Credentials
 
 ```js
-import { Map, useMaplibreContext } from '@neukolabs/react-native-maplibre-js';
+import { MaplibreMap } from '@neukolabs/react-native-maplibre-js';
 
 export default function MapView() {
 
-  const onMapEvent = async (eventName) => {
-    // 
-  };
-
   return (
-    <Map
+    <MaplibreMap
       containerStyle={styles.map}
       options={{
         center: [101.63787, 3.14261],
         zoom: 12,
         preserveDrawingBuffer: true,
       }}
-      mapEventListeners={['load']}
-      onMapEvent={onMapEvent}
       awsLocationService={{
         // Your map's region
         region: 'us-east-1', 
@@ -219,6 +196,49 @@ export default function MapView() {
         }
       }}
     />
+  );
+}
+```
+
+### 3.Map with marker
+
+Make sure the Marker is inside MaplibreMap component.
+
+```js
+import { useRef } from 'react';
+import { MaplibreMap, Marker } from '@neukolabs/react-native-maplibre-js';
+
+export default function MapView() {
+
+  const markerRef = useRef();
+
+  return (
+    <MaplibreMap
+      containerStyle={styles.map}
+      options={{
+        center: [101.63787, 3.14261],
+        zoom: 12,
+        preserveDrawingBuffer: true,
+      }}
+    >
+      <Marker
+          ref={markerRef}
+          options={{
+            color: '#ff0000',
+            draggable: true,
+          }}
+          coords={[101.63787, 3.14261]}
+          eventNames={['dragend']}
+          onEvent={async (e) => {
+            if (e === 'dragend') {
+              
+              // get current position adter drag the marker
+              const pos = await markerRef.current.getLngLat();
+              console.log(pos);
+            }
+          }}
+        />
+    </MaplibreMap>
   );
 }
 ```

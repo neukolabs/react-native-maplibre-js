@@ -36,7 +36,7 @@ export default function MapView() {
         containerStyle={styles.map}
         options={{
           style:
-            'https://api.maptiler.com/maps/basic-v2/style.json?key=Lq7r4ksjBkpu8Q8g2ERj',
+            'https://api.maptiler.com/maps/basic-v2/style.json?key=you-maptiler-key',
           center: [101.63787, 3.14261],
           zoom: 12,
           preserveDrawingBuffer: true,
