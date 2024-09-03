@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { MaplibreProvider } from '@neukolabs/react-native-maplibre-js';
 // import Mapli
 import MapView from './mapview';
 
@@ -15,9 +14,7 @@ const styles = StyleSheet.create({
 export default function App() {
   return (
     <View style={styles.container}>
-      <MaplibreProvider>
-        <MapView />
-      </MaplibreProvider>
+      <MapView />
     </View>
   );
 }

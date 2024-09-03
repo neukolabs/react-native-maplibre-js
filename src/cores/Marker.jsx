@@ -13,7 +13,7 @@ export const Marker = forwardRef((props, ref) => {
 
   // hooks
   const { map, eventManager } = useMaplibreContext();
-  const { mapRef, loaded } = map;
+  const { _internalMapRef: mapRef, loaded } = map;
 
   // state
   const [identifier, setIdentifier] = useState(null);
@@ -31,7 +31,7 @@ export const Marker = forwardRef((props, ref) => {
   ) => {
     // generate random id
     const id = makeid(24);
-    console.log('Marker@invokeGetResponse', markerId, id, name, args);
+    console.debug('Marker@invokeGetResponse', markerId, id, name, args);
 
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -39,14 +39,14 @@ export const Marker = forwardRef((props, ref) => {
       }, 2000);
 
       eventManager.addListener(id, (params) => {
-        console.log('Marker.eventManager#addListener', id, params);
+        console.debug('Marker.eventManager#addListener', id, params);
         clearTimeout(timeout);
         eventManager.removeAllListeners(id);
         resolve(params);
       });
 
       // send data
-      mapRef.postMessage(
+      mapRef.current.postMessage(
         JSON.stringify({
           type: type,
           markerId: markerId,
@@ -236,7 +236,7 @@ export const Marker = forwardRef((props, ref) => {
 
   /* eslint-disable */
   useEffect(() => {
-    console.log('Marker@useEffect[identifier]', 'identifier', identifier);
+    console.debug('Marker@useEffect[identifier]', 'identifier', identifier);
     if (identifier === null) return;
 
     // create listener
@@ -254,7 +254,7 @@ export const Marker = forwardRef((props, ref) => {
     }, 500);
 
     return () => {
-      console.log('Marker@useEffect[]', 'exiting', identifier);
+      console.debug('Marker@useEffect[]', 'exiting', identifier);
 
        // remove listeners
       eventNames.forEach(item => {
@@ -268,7 +268,7 @@ export const Marker = forwardRef((props, ref) => {
   /* eslint-enable */
 
   useEffect(() => {
-    console.log('Marker@useEffect[loaded]', 'loaded', loaded);
+    console.debug('Marker@useEffect[loaded]', 'loaded', loaded);
     if (!loaded) return;
     setIdentifier(makeid(24));
   }, [loaded]);

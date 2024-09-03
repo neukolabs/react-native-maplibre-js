@@ -1,68 +1,65 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
-import {
-  Map,
-  Marker,
-  useMaplibreContext,
-} from '@neukolabs/react-native-maplibre-js';
+import { MaplibreMap, Marker } from '@neukolabs/react-native-maplibre-js';
 
 export default function MapView() {
   // hooks
-  const { map } = useMaplibreContext();
-  const { getCenter, setCenter } = map;
+  // const { map } = useMaplibreContext();
+  const mapRef = useRef();
   const markerRef = useRef();
 
   // state
   const [showMarker, setShowMarker] = useState(true);
 
-  const onMapEvent = (name) => {
-    console.log('example.MapView@onMapEvent', name);
-    if (name === 'load') {
-      run();
-    }
+  const onMaploaded = () => {
+    console.debug('example.MapView@onMaploaded');
   };
 
-  const run = async () => {
-    console.log('example.MapView@run', 'invoked');
-    // setCenter([-74, 38]);
-    // markerRef.current.setLngLat([-74, 38]);
-    const center = await getCenter();
-    console.log('example.MapView@run', 'run', center);
+  const onMapEvent = async (name) => {
+    console.debug('example.MapView@onMapEvent', name);
+    const center = await mapRef.current.getCenter();
+    console.debug('example.MapView@onMapEvent', 'center', center);
   };
+
+  // const run = async () => {
+  //   console.log('example.MapView@run', 'invoked');
+  //   // setCenter([-74, 38]);
+  //   // markerRef.current.setLngLat([-74, 38]);
+  //   const center = await getCenter();
+  //   console.log('example.MapView@run', 'run', center);
+  // };
 
   return (
     <>
-      <Map
+      <MaplibreMap
+        ref={mapRef}
         containerStyle={styles.map}
         options={{
           style:
-            'https://api.maptiler.com/maps/basic-v2/style.json?key=map_api_key',
+            'https://api.maptiler.com/maps/basic-v2/style.json?key=Lq7r4ksjBkpu8Q8g2ERj',
           center: [101.63787, 3.14261],
           zoom: 12,
           preserveDrawingBuffer: true,
         }}
-        mapEventListeners={['load']}
+        mapEventListeners={['load', 'dragend']}
         onMapEvent={onMapEvent}
+        onMapLoadedEvent={(e) => onMaploaded()}
       >
-        {showMarker && (
-          <Marker
-            ref={markerRef}
-            options={{
-              color: '#ff0000',
-              draggable: true,
-            }}
-            coords={[101.63787, 3.14261]}
-            eventNames={['dragend']}
-            onEvent={(e) => {
-              console.log('example.MapView@Marker#onEvent', e);
-              const pos = markerRef.current.getLngLat();
-              console.log('example.MapView@Marker#onEvent', 'pos', pos);
-              setCenter([-74, 38]);
-              markerRef.current.setLngLat([-74, 38]);
-            }}
-          />
-        )}
-      </Map>
+        <Marker
+          ref={markerRef}
+          options={{
+            color: '#ff0000',
+            draggable: true,
+          }}
+          coords={[101.63787, 3.14261]}
+          eventNames={['dragend']}
+          onEvent={(e) => {
+            console.log('example.MapView@Marker#onEvent', e);
+            const pos = markerRef.current.getLngLat();
+            console.log('example.MapView@Marker#onEvent', 'pos', pos);
+          }}
+        />
+      </MaplibreMap>
       <TouchableOpacity
         style={{ padding: 10, backgroundColor: 'green' }}
         onPress={() => setShowMarker(!showMarker)}
