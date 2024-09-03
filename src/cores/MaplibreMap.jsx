@@ -85,11 +85,11 @@ export const MaplibreMap = forwardRef((props, ref) => {
     } catch (err) {
       return;
     }
-    console.debug('MaplibreMap.onMessage', 'event', event);
+    // console.debug('MaplibreMap.onMessage', 'event', event);
     try {
       switch (event.type) {
         case 'log':
-          console.log(event.payload.message);
+          // console.log(event.payload.message);
           break;
         case 'mapEvent':
           dispatchEvent(event.payload.name);
@@ -123,7 +123,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
   const invokeGetResponse = async (name, ...args) => {
     // generate random id
     const id = makeid(24);
-    console.debug('MaplibreMap@invokeGetResponse', id, name, args);
+    // console.debug('MaplibreMap@invokeGetResponse', id, name, args);
 
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -131,7 +131,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
       }, 2000);
 
       eventManager.addListener(id, (params) => {
-        console.debug('MaplibreMap.eventManager#addListener', id, params);
+        // console.debug('MaplibreMap.eventManager#addListener', id, params);
         clearTimeout(timeout);
         eventManager.removeAllListeners(id);
         resolve(params);
@@ -212,7 +212,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
       return await invokeGetResponse('getCanvasContainer');
     },
     async getCenter() {
-      console.debug('someone asking for center');
+      // console.debug('someone asking for center');
       return await invokeGetResponse('getCenter');
     },
     async getContainer() {
@@ -543,7 +543,7 @@ export const MaplibreMap = forwardRef((props, ref) => {
           onMessage={(e) => onMessage(e)}
           onError={(syntheticEvent) => {
             const { nativeEvent } = syntheticEvent;
-            console.warn('WebView error: ', nativeEvent);
+            // console.warn('WebView error: ', nativeEvent);
           }}
         >
           {children}

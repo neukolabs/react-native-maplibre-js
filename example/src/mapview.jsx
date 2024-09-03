@@ -53,9 +53,9 @@ export default function MapView() {
           }}
           coords={[101.63787, 3.14261]}
           eventNames={['dragend']}
-          onEvent={(e) => {
+          onEvent={async (e) => {
             console.log('example.MapView@Marker#onEvent', e);
-            const pos = markerRef.current.getLngLat();
+            const pos = await markerRef.current.getLngLat();
             console.log('example.MapView@Marker#onEvent', 'pos', pos);
           }}
         />
