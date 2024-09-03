@@ -30,6 +30,19 @@ class Marker {
     }
   }
 
+  invokeMethod(methodName, methodArgs = []) {
+    try {
+      if (!this.marker) {
+        throw new Error('Marker not initialized');
+      }
+      log('Marker.invokeMethod', methodName, methodArgs);
+      this.marker[methodName].apply(this.marker, methodArgs);
+      return null;
+    } catch (err) {
+      error('MapError', err.message);
+    }
+  }
+
   invokeGetResponseMethod(methodName, methodArgs = []) {
     try {
       if (!this.marker) {

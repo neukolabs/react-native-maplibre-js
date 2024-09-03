@@ -23,12 +23,7 @@ export const Marker = forwardRef((props, ref) => {
    * arguments, listens for a response, and resolves with the received parameters.
    * @returns The `invokeGetResponse` function is returning a Promise.
    */
-  const invokeGetResponse = async (
-    markerId,
-    name,
-    type = 'invokeMarkerFunction',
-    ...args
-  ) => {
+  const invokeGetResponse = async (markerId, name, ...args) => {
     // generate random id
     const id = makeid(24);
     // console.debug('Marker@invokeGetResponse', markerId, id, name, args);
@@ -48,7 +43,37 @@ export const Marker = forwardRef((props, ref) => {
       // send data
       mapRef.current.postMessage(
         JSON.stringify({
-          type: type,
+          type: 'getResponseMarkerFunction',
+          markerId: markerId,
+          functionName: name,
+          arguments: [...args],
+          requestId: id,
+        })
+      );
+    });
+  };
+
+  const invokeFunction = async (markerId, name, ...args) => {
+    // generate random id
+    const id = makeid(24);
+    // console.debug('MaplibreMap@invokeFunction', id, name, args);
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject('MarkerTimeoutError');
+      }, 3000);
+
+      eventManager.addListener(id, (params) => {
+        // console.debug('MaplibreMap.eventManager#addListener', id, params);
+        clearTimeout(timeout);
+        eventManager.removeAllListeners(id);
+        resolve(params);
+      });
+
+      // send data
+      mapRef.current.postMessage(
+        JSON.stringify({
+          type: 'invokeMarkerFunction',
           markerId: markerId,
           functionName: name,
           arguments: [...args],
@@ -61,176 +86,87 @@ export const Marker = forwardRef((props, ref) => {
   // methods for marker
   useImperativeHandle(ref, () => ({
     async addClassName(className) {
-      return await invokeGetResponse(
-        identifier,
-        'addControl',
-        'invokeMarkerFunction',
-        className
-      );
+      return await invokeFunction(identifier, 'addControl', className);
     },
     async getElement() {
-      return await invokeGetResponse(
-        identifier,
-        'getElement',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'getElement');
     },
     async getLngLat() {
-      return await invokeGetResponse(
-        identifier,
-        'getLngLat',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'getLngLat');
     },
     async getOffset() {
-      return await invokeGetResponse(
-        identifier,
-        'getOffset',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'getOffset');
     },
     async getPitchAlignment() {
-      return await invokeGetResponse(
-        identifier,
-        'getPitchAlignment',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'getPitchAlignment');
     },
     async getPopup() {
-      return await invokeGetResponse(
-        identifier,
-        'getPopup',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'getPopup');
     },
     async getRotation() {
-      return await invokeGetResponse(
-        identifier,
-        'getRotation',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'getRotation');
     },
     async getRotationAlignment() {
-      return await invokeGetResponse(
-        identifier,
-        'getRotationAlignment',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'getRotationAlignment');
     },
     async isDraggable() {
-      return await invokeGetResponse(
-        identifier,
-        'isDraggable',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'isDraggable');
     },
     async listens() {
-      return await invokeGetResponse(
-        identifier,
-        'listens',
-        'invokeMarkerFunction'
-      );
+      return await invokeGetResponse(identifier, 'listens');
     },
     async removeClassName(className) {
-      return await invokeGetResponse(
-        identifier,
-        'removeClassName',
-        'invokeMarkerFunction',
-        className
-      );
+      return await invokeFunction(identifier, 'removeClassName', className);
     },
     async setDraggable(shouldBeDraggable) {
-      return await invokeGetResponse(
+      return await invokeFunction(
         identifier,
         'setDraggable',
-        'invokeMarkerFunction',
         shouldBeDraggable
       );
     },
     async setEventedParent(parent, data = {}) {
-      return await invokeGetResponse(
-        identifier,
-        'setEventedParent',
-        'invokeMarkerFunction',
-        parent,
-        data
-      );
+      return await invokeFunction(identifier, 'setEventedParent', parent, data);
     },
     async setLngLat(lnglat) {
-      return await invokeGetResponse(
-        identifier,
-        'setLngLat',
-        'invokeMarkerFunction',
-        lnglat
-      );
+      return await invokeFunction(identifier, 'setLngLat', lnglat);
     },
     async setOffset(offset) {
-      return await invokeGetResponse(
-        identifier,
-        'setOffset',
-        'invokeMarkerFunction',
-        offset
-      );
+      return await invokeFunction(identifier, 'setOffset', offset);
     },
     async setOpacity(opacity, opacityWhenCovered) {
-      return await invokeGetResponse(
+      return await invokeFunction(
         identifier,
         'setOpacity',
-        'invokeMarkerFunction',
         opacity,
         opacityWhenCovered
       );
     },
     async setPitchAlignment(alignment) {
-      return await invokeGetResponse(
-        identifier,
-        'setPitchAlignment',
-        'invokeMarkerFunction',
-        alignment
-      );
+      return await invokeFunction(identifier, 'setPitchAlignment', alignment);
     },
     /* TODO - To support in next release with Popup class */
     // async setPopup(popup) {
     //   return await invokeGetResponse(identifier, 'setPopup', 'invokeMarkerFunction', popup);
     // },
     async setRotation(rotation) {
-      return await invokeGetResponse(
-        identifier,
-        'setRotation',
-        'invokeMarkerFunction',
-        rotation
-      );
+      return await invokeFunction(identifier, 'setRotation', rotation);
     },
     async setRotationAlignment(alignment) {
-      return await invokeGetResponse(
+      return await invokeFunction(
         identifier,
         'setRotationAlignment',
-        'invokeMarkerFunction',
         alignment
       );
     },
     async setSubpixelPositioning(value) {
-      return await invokeGetResponse(
-        identifier,
-        'setSubpixelPositioning',
-        'invokeMarkerFunction',
-        value
-      );
+      return await invokeFunction(identifier, 'setSubpixelPositioning', value);
     },
     async toggleClassName(className) {
-      return await invokeGetResponse(
-        identifier,
-        'toggleClassName',
-        'invokeMarkerFunction',
-        className
-      );
+      return await invokeGetResponse(identifier, 'toggleClassName', className);
     },
     async togglePopup() {
-      return await invokeGetResponse(
-        identifier,
-        'togglePopup',
-        'invokeMarkerFunction'
-      );
+      return await invokeFunction(identifier, 'togglePopup');
     },
   }));
 
@@ -245,8 +181,8 @@ export const Marker = forwardRef((props, ref) => {
     });
 
     // init marker on map
-    setTimeout(() => {
-      invokeGetResponse(identifier, 'init', 'invokeMarkerFunction', {
+    setTimeout(async () => {
+      await invokeFunction(identifier, 'init', {
         coords: coords,
         options: options,
         eventNames: eventNames,
@@ -262,7 +198,7 @@ export const Marker = forwardRef((props, ref) => {
       });
 
       // remove from map
-      invokeGetResponse(identifier, 'remove', 'invokeMarkerFunction', null);
+      invokeFunction(identifier, 'remove', null);
     };
   }, [identifier]);
   /* eslint-enable */

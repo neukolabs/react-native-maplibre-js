@@ -106,7 +106,6 @@ async function markerHandler(event) {
   try {
     const markerId = event.markerId;
     const _marker = MARKERS.find((marker) => marker.id === markerId);
-    let res = null;
     if (_marker === undefined) {
       const marker = new Marker(markerId, _mapInstance);
       marker.init(event.arguments[0].options, event.arguments[0].coords);
@@ -121,11 +120,27 @@ async function markerHandler(event) {
         _marker.marker.remove();
         MARKERS = MARKERS.filter((item) => item.id !== markerId);
       } else {
-        res = _marker.marker.invokeGetResponseMethod(
-          event.functionName,
-          event.arguments
-        );
+        _marker.marker.invokeMethod(event.functionName, event.arguments);
       }
+    }
+    responseMarkerInvokedMethodCallback(event.requestId, null);
+  } catch (err) {
+    error(err);
+  }
+}
+
+async function responsiveMarkerHandler(event) {
+  try {
+    const markerId = event.markerId;
+    const _marker = MARKERS.find((marker) => marker.id === markerId);
+    let res = null;
+    if (_marker === undefined) {
+      throw Error('MarkerNotFoundExeption');
+    } else {
+      res = _marker.marker.invokeGetResponseMethod(
+        event.functionName,
+        event.arguments
+      );
     }
     responseMarkerInvokedMethodCallback(event.requestId, res);
   } catch (err) {
@@ -162,6 +177,10 @@ window.messageCallback = async function (e) {
     }
     case 'invokeMarkerFunction': {
       await markerHandler(event);
+      break;
+    }
+    case 'getResponseMarkerFunction': {
+      await responsiveMarkerHandler(event);
       break;
     }
     default: {

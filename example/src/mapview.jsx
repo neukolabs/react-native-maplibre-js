@@ -61,6 +61,7 @@ export default function MapView() {
             console.log('example.MapView@Marker#onEvent', e);
             const pos = await markerRef.current.getLngLat();
             console.log('example.MapView@Marker#onEvent', 'pos', pos);
+            await mapRef.current.setCenter([pos.lng, pos.lat]);
           }}
         />
       </MaplibreMap>
