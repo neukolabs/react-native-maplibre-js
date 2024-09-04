@@ -2,10 +2,12 @@
 import { log, error } from './logger';
 import Map from './map';
 import Marker from './marker';
+import Source from './source';
 
 let map = null;
 let _mapInstance = null;
 let MARKERS = [];
+let SOURCES = [];
 
 function mapEventListenerCallback(name) {
   window.ReactNativeWebView.postMessage(
@@ -148,6 +150,32 @@ async function responsiveMarkerHandler(event) {
   }
 }
 
+async function sourceHandler(event) {
+  try {
+    const sourceId = event.sourceId;
+    const _source = SOURCES.find((item) => item.id === sourceId);
+    if (_source === undefined) {
+      const source = new Source(sourceId, _mapInstance, event.arguments[0]);
+      SOURCES.push({
+        id: sourceId,
+        source: source,
+      });
+    } else {
+      if (event.functionName.toUpperCase() === 'SETDATA') {
+        _source.source.setData(event.arguments[0]);
+      } else if (event.functionName.toUpperCase() === 'REMOVE') {
+        _source.source.remove();
+        SOURCES = SOURCES.filter((item) => item.id !== sourceId);
+      } else {
+        throw Error('Unsupported function');
+      }
+    }
+    responseInvokedMethodCallback(event.requestId, null);
+  } catch (err) {
+    error(err);
+  }
+}
+
 window.initMap = function (options) {
   try {
     const params = JSON.parse(options);
@@ -183,9 +211,12 @@ window.messageCallback = async function (e) {
       await responsiveMarkerHandler(event);
       break;
     }
+    case 'invokeSourceFunction': {
+      await sourceHandler(event);
+      break;
+    }
     default: {
       break;
     }
   }
-  log('window.addEventListener@message', 'completed');
 };

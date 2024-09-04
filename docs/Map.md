@@ -49,3 +49,6 @@ For below methods, the arguments are without the first argument.
 |addControl|addControl(position?)|position on the map to which the control will be added. Valid values are 'top-left', 'top-right', 'bottom-left', and 'bottom-right'. Defaults to 'top-right'.|
 |hasControl|hasControl()||
 |removeControl|removeControl()||
+|addSource| Use `Source` component | Refer to [docs](./Source.md)|
+|getSource| Use `Source` component | Refer to [docs](./Source.md)|
+|removeSource| Use `Source` component | Refer to [docs](./Source.md)|

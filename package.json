@@ -1,6 +1,6 @@
 {
   "name": "@neukolabs/react-native-maplibre-js",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "A Maplibre JS wrapper for react-native",
   "source": "./src/index.jsx",
   "main": "./lib/commonjs/index.js",
