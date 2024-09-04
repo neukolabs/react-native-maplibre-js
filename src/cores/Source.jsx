@@ -19,15 +19,15 @@ export const Source = forwardRef((props, ref) => {
   const invokeFunction = async (sourceId, name, ...args) => {
     // generate random id
     const _id = makeid(24);
-    // console.debug('Source@invokeFunction', id, name, args);
+    // console.debug('Source@invokeFunction', _id, id, name, args);
 
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject('SourceTimeoutError');
       }, 3000);
 
-      eventManager.addListener(id, (params) => {
-        // console.debug('Source.eventManager#addListener', id, params);
+      eventManager.addListener(_id, (params) => {
+        // console.debug('Source.eventManager#addListener', _id, id, params);
         clearTimeout(timeout);
         eventManager.removeAllListeners(_id);
         resolve(params);
