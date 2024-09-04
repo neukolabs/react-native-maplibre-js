@@ -12,6 +12,7 @@ export default function MapView() {
   const mapRef = useRef();
   const markerRef = useRef();
   const sourceRef = useRef();
+  const routeSourceRef = useRef();
 
   // state
   const [showMarker, setShowMarker] = useState(true);
@@ -29,6 +30,19 @@ export default function MapView() {
           'circle-color': '#FF9900',
         },
         filter: ['==', '$type', 'Point'],
+      });
+      await mapRef.current.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': '#ff0000',
+          'line-width': 7,
+        },
       });
     } catch (err) {
       console.warn(err);
